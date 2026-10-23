@@ -39,3 +39,13 @@ The milestone is a data-collection gate, not a claim that 20 observations are st
 3. Inspect outcome definitions and missingness.
 4. Add a pre-registered comparison of baseline versus recommendation adoption only if the protocol is stable.
 5. Move model routing and evidence retrieval into `q-one-agent` after the core event contract has remained backward-compatible for one release.
+
+## Extension (2026-10-23): toward verifiable self-improvement
+
+The long-horizon direction — running the proposal/verification loop with LLM development paths as proposal generators and Q-One as the verifier — is written down as architecture with falsifiable milestones instead of an "AGI" narrative:
+
+- `ARCHITECTURE.md` — the three-layer loop (proposal → quantified verification → calibration/meta-audit → gated self-evolution), with a mapping from each current LLM development path to an existing sibling repo.
+- `MILESTONE1_PREREG.md` — frozen pre-registration for the first-20-decisions gate (domains, metrics, analysis plan, kill criteria).
+- **M1** calibration improves over time (this plan's first milestone, operationalized) · **M2** break the self-evolution plateau on a frozen benchmark · **M3** cross-domain transfer without calibration collapse.
+
+Guardrails unchanged: private logs stay local; the human decision event is mandatory; protocol changes are dated amendments.
