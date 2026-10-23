@@ -1,0 +1,23 @@
+{
+  "question": "下周一上午先写初稿还是先开同步会？",
+  "domain": "work",
+  "success_criterion": "在周一 12:00 前产出可供评审的初稿或形成明确会议结论",
+  "deadline": "2026-10-26T12:00:00-07:00",
+  "reversible": true,
+  "risk": "low",
+  "context": "这是一个可逆、低风险的日程选择示例。",
+  "options": [
+    {
+      "id": "draft",
+      "label": "先写初稿",
+      "expected_cost_hours": 2,
+      "notes": "先形成可评审材料，再决定是否需要同步会。"
+    },
+    {
+      "id": "meeting",
+      "label": "先开同步会",
+      "expected_cost_hours": 1,
+      "notes": "先对齐上下文，再开始写作。"
+    }
+  ]
+}

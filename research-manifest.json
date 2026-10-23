@@ -1,0 +1,27 @@
+{
+  "project": {
+    "title": "Q-One Core",
+    "domain": "auditable quantified-life decision systems",
+    "status": "active",
+    "version": "0.1.0"
+  },
+  "research_question": "Can a local event ledger make quantified-life recommendations auditable without removing human agency?",
+  "hypotheses": [
+    {
+      "id": "H1",
+      "text": "An append-only, hash-chained ledger makes decision provenance easier to inspect and replay."
+    },
+    {
+      "id": "H2",
+      "text": "Explicit confidence, baseline, and outcome fields make calibration measurable over time."
+    }
+  ],
+  "loop": {
+    "phase": "M1",
+    "iteration": 1,
+    "next_review": "after the first 20 resolved decisions"
+  },
+  "experiments": [],
+  "artifacts": [],
+  "reviews": []
+}

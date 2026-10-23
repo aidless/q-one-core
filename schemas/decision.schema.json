@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aidless/q-one-core/blob/main/schemas/decision.schema.json",
+  "title": "Q-One decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["question", "domain", "options", "success_criterion", "deadline", "reversible"],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1},
+    "decision_id": {"type": "string", "pattern": "^D-[0-9]{8}-[a-f0-9]{6}$"},
+    "question": {"type": "string", "minLength": 1},
+    "domain": {"type": "string", "minLength": 1},
+    "success_criterion": {"type": "string", "minLength": 1},
+    "deadline": {"type": "string", "minLength": 1},
+    "reversible": {"type": "boolean"},
+    "risk": {"enum": ["low", "medium", "high"]},
+    "context": {"type": "string"},
+    "options": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "label": {"type": "string", "minLength": 1},
+          "expected_cost_hours": {"type": "number", "minimum": 0},
+          "notes": {"type": "string"}
+        }
+      }
+    }
+  }
+}
