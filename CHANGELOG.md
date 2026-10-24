@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Fixed forecast scoring to exclude recommendations whose option was not selected.
+- Added traceable eligible rows, exclusion reasons, and explicit adoption denominators.
+- Added seven regression tests including a synthetic CLI flow and an override case that fails on the original implementation.
+- Fixed optional empty text validation so resolving a decision without notes works.
+
 - Added source-linked Chinese research synthesis and implementation priorities.
 - Clarified prototype status and pending real-model acceptance.
 

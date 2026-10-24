@@ -48,6 +48,8 @@ The current gate always sets `requires_human=true` and `auto_eligible=false`. Lo
 
 ## Outcomes and metrics
 
-`yes` and `no` outcomes are the only binary labels used for the initial Brier-score calculation. `partial` and `unknown` remain in the ledger but are excluded from that calculation. The report also gives a Wilson interval for the observed binary success rate when there are eligible rows.
+Only resolved `yes` and `no` outcomes for the human-selected recommended option enter the Brier-score calculation. If the human chooses another option, the recommendation's outcome is unobserved and is excluded as `recommended_option_not_selected`. `partial`, `unknown`, unresolved records, missing choices or probabilities, and invalid probabilities are also excluded. Each scored row includes a decision ID and option ID; exclusions have explicit counts and decision IDs.
+
+`recommendation_adoption_n` counts human decisions that had a recommendation, so human-only decisions do not dilute the adoption rate. The report retains `calibration` as the JSON field name for compatibility, but Brier score is a forecast loss and is not by itself proof of calibration. The selected subset cannot establish causal improvement or outcomes of unselected options. The Wilson interval is descriptive under the binomial model; repeated personal observations may violate its independence assumptions.
 
 These metrics describe the collected decision process. They do not establish causal effects, clinical validity, or universal human preferences.

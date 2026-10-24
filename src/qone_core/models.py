@@ -24,7 +24,7 @@ def new_decision_id() -> str:
 
 
 def _text(value: Any, field: str, *, required: bool = True) -> str | None:
-    if value is None and not required:
+    if not required and (value is None or (isinstance(value, str) and not value.strip())):
         return None
     if not isinstance(value, str) or not value.strip():
         raise ValidationError(f"{field} must be a non-empty string")

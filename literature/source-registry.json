@@ -727,7 +727,8 @@
       "related_hypothesis": null,
       "citation_key": "qone_proper_scoring",
       "metadata_verified": true,
-      "note_file": "notes/S15-proper-scoring.md"
+      "note_file": "notes/S15-proper-scoring.md",
+      "engineering_status": "option_matching_fixed_with_seven_regression_tests; scientific_effect_not_evaluated"
     },
     {
       "id": "S16",
