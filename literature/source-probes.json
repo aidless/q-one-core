@@ -1,0 +1,35 @@
+[
+  {
+    "source_id": "S01",
+    "kind": "code_license",
+    "url": "https://raw.githubusercontent.com/NandhaKishorM/laya/0a05a45052e23ae0b887a490fe8d6d9c8cff2ab5/LICENSE",
+    "revision": "0a05a45052e23ae0b887a490fe8d6d9c8cff2ab5",
+    "checked_date": "2026-10-23",
+    "retrieval_channel": "public HTTP cross-check after GitHub connector read",
+    "status": "retrieved",
+    "response_sha256": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+    "retrieved_at_utc": "2026-10-24T01:38:19.932795+00:00"
+  },
+  {
+    "source_id": "S01",
+    "kind": "readme",
+    "url": "https://raw.githubusercontent.com/NandhaKishorM/laya/0a05a45052e23ae0b887a490fe8d6d9c8cff2ab5/README.md",
+    "revision": "0a05a45052e23ae0b887a490fe8d6d9c8cff2ab5",
+    "checked_date": "2026-10-23",
+    "retrieval_channel": "public HTTP cross-check after GitHub connector read",
+    "status": "retrieved",
+    "response_sha256": "9df600ea03a93c93e58cb24073f7bef6a687e89a5403764c45af40ffee49c17a",
+    "retrieved_at_utc": "2026-10-24T01:38:20.444946+00:00"
+  },
+  {
+    "source_id": "S23",
+    "kind": "readme",
+    "url": "https://raw.githubusercontent.com/langchain-ai/langgraph/main/README.md",
+    "revision": null,
+    "checked_date": "2026-10-23",
+    "retrieval_channel": "public HTTP cross-check after GitHub connector read",
+    "status": "retrieved",
+    "response_sha256": "3a13e257af1216962d53d72414a7f44ac1fc5cea34d994bdff60ea2a3b045933",
+    "retrieved_at_utc": "2026-10-24T01:38:20.916984+00:00"
+  }
+]

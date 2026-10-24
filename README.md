@@ -1,5 +1,7 @@
 # Q-One Core
 
+> 中文研究入口：[多学科融合蓝图](docs/SYNTHESIS_BLUEPRINT.zh-CN.md)。当前为初版原型，真实模型接入与端到端验收尚未完成。
+
 Q-One Core is the first repository in a three-part open-source system for **“万事万物皆可量化”**: turn a decision into explicit variables, record what was known before an agent recommendation, preserve the human decision, and later compare the prediction with the observed outcome.
 
 This repository deliberately starts with a small, local protocol. It does not claim that a score is a complete model of a person, and it does not automate consequential decisions.
@@ -17,9 +19,9 @@ This repository deliberately starts with a small, local protocol. It does not cl
 ## Quick start
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install -e .
+python3 -m pip install -e .
 
 qone --data-dir .qone-data init
 qone --data-dir .qone-data create --file examples/decision.json
