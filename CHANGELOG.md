@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 — 2026-10-24
+
+- Added transactional DecisionService and finite-number/timezone/schema validation.
+- Added concurrent baseline and transition tests.
+
 ## Unreleased
 
 - Fixed forecast scoring to exclude recommendations whose option was not selected.

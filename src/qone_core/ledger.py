@@ -8,7 +8,7 @@ import os
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Callable, Iterator
 
 try:
     import fcntl
@@ -32,7 +32,7 @@ class LedgerError(RuntimeError):
 
 
 def canonical_json(value: Any) -> str:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
 
 
 def event_hash(event: dict[str, Any]) -> str:
@@ -96,31 +96,36 @@ class Ledger:
             self._verify_events(events)
             return len(events)
 
-    def append(self, event_type: str, payload: dict[str, Any]) -> dict[str, Any]:
+    def _append_unlocked(self, events, event_type, payload):
+        event = {
+            "seq": len(events) + 1,
+            "ts": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            "type": event_type,
+            "payload": payload,
+            "prev_hash": events[-1]["hash"] if events else GENESIS,
+        }
+        event["hash"] = event_hash(event)
+        with self.path.open("a", encoding="utf-8") as handle:
+            handle.write(canonical_json(event) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        return event
+
+    def transact(self, event_type: str, prepare: Callable) -> dict[str, Any]:
+        """Validate and append one transition while holding the same writer lock."""
         if event_type not in EVENT_TYPES:
             raise LedgerError(f"unknown event type: {event_type}")
-        if not isinstance(payload, dict):
-            raise LedgerError("event payload must be an object")
         with self._lock():
             events = self._read_unlocked()
             self._verify_events(events)
-            previous = events[-1]["hash"] if events else GENESIS
-            event = {
-                "seq": len(events) + 1,
-                "ts": datetime.now(timezone.utc)
-                .replace(microsecond=0)
-                .isoformat()
-                .replace("+00:00", "Z"),
-                "type": event_type,
-                "payload": payload,
-                "prev_hash": previous,
-            }
-            event["hash"] = event_hash(event)
-            with self.path.open("a", encoding="utf-8") as handle:
-                handle.write(canonical_json(event) + "\n")
-                handle.flush()
-                os.fsync(handle.fileno())
-            return event
+            payload = prepare(self.project_events(events))
+            if not isinstance(payload, dict):
+                raise LedgerError("event payload must be an object")
+            return self._append_unlocked(events, event_type, payload)
+
+    def append(self, event_type: str, payload: dict[str, Any]) -> dict[str, Any]:
+        """Low-level append for trusted imports; product callers use DecisionService."""
+        return self.transact(event_type, lambda states: payload)
 
     def events(self) -> list[dict[str, Any]]:
         with self._lock():
@@ -129,8 +134,12 @@ class Ledger:
             return events
 
     def project_all(self) -> dict[str, dict[str, Any]]:
+        return self.project_events(self.events())
+
+    @staticmethod
+    def project_events(events) -> dict[str, dict[str, Any]]:
         states: dict[str, dict[str, Any]] = {}
-        for event in self.events():
+        for event in events:
             payload = event["payload"]
             decision_id = payload.get("decision_id")
             if not isinstance(decision_id, str):

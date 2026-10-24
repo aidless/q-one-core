@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from secrets import token_hex
+from math import isfinite
 from typing import Any
 
 
@@ -50,7 +51,7 @@ def validate_option(raw: Any) -> dict[str, Any]:
     expected_cost = raw.get("expected_cost_hours", 0)
     if isinstance(expected_cost, bool) or not isinstance(expected_cost, (int, float)):
         raise ValidationError("option.expected_cost_hours must be a non-negative number")
-    if expected_cost < 0:
+    if not isfinite(float(expected_cost)) or expected_cost < 0:
         raise ValidationError("option.expected_cost_hours must be a non-negative number")
     notes = _text(raw.get("notes"), "option.notes", required=False)
     return {
@@ -72,21 +73,31 @@ def validate_decision(raw: Any) -> dict[str, Any]:
     if len(set(ids)) != len(ids):
         raise ValidationError("decision option ids must be unique")
 
+    version = raw.get("schema_version", 1)
+    if type(version) is not int or version != 1:
+        raise ValidationError("unsupported decision schema version")
+    deadline = _text(raw.get("deadline"), "deadline")
+    try:
+        parsed = datetime.fromisoformat(deadline.replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            raise ValueError("timezone required")
+    except ValueError as exc:
+        raise ValidationError("deadline must be an ISO timestamp with timezone") from exc
     risk = raw.get("risk", "medium")
-    if risk not in RISK_LEVELS:
+    if not isinstance(risk, str) or risk not in RISK_LEVELS:
         raise ValidationError(f"decision.risk must be one of {sorted(RISK_LEVELS)}")
     reversible = raw.get("reversible")
     if not isinstance(reversible, bool):
         raise ValidationError("decision.reversible must be a boolean")
 
     return {
-        "schema_version": int(raw.get("schema_version", 1)),
+        "schema_version": version,
         "decision_id": _text(raw.get("decision_id"), "decision_id", required=False)
         or new_decision_id(),
         "question": _text(raw.get("question"), "question"),
         "domain": _text(raw.get("domain"), "domain"),
         "success_criterion": _text(raw.get("success_criterion"), "success_criterion"),
-        "deadline": _text(raw.get("deadline"), "deadline"),
+        "deadline": deadline,
         "reversible": reversible,
         "risk": risk,
         "options": normalized_options,
@@ -122,7 +133,7 @@ def validate_outcome(raw: Any) -> dict[str, Any]:
     if not isinstance(raw, dict):
         raise ValidationError("outcome must be an object")
     success = raw.get("success")
-    if success not in OUTCOMES:
+    if not isinstance(success, str) or success not in OUTCOMES:
         raise ValidationError(f"outcome.success must be one of {sorted(OUTCOMES)}")
     return {
         "decision_id": _text(raw.get("decision_id"), "outcome.decision_id"),

@@ -1,6 +1,6 @@
 # Q-One Core
 
-> 中文研究入口：[多学科融合蓝图](docs/SYNTHESIS_BLUEPRINT.zh-CN.md)。当前为初版原型，真实模型接入与端到端验收尚未完成。
+> 中文研究入口：[多学科融合蓝图](docs/SYNTHESIS_BLUEPRINT.zh-CN.md)。v0.2 已接入完整个人应用；[使用入口与验收](https://github.com/aidless/q-one-life)。
 
 Q-One Core is the first repository in a three-part open-source system for **“万事万物皆可量化”**: turn a decision into explicit variables, record what was known before an agent recommendation, preserve the human decision, and later compare the prediction with the observed outcome.
 
@@ -14,7 +14,7 @@ This repository deliberately starts with a small, local protocol. It does not cl
 | `q-one-agent` | Model/tool adapters, retrieval, routing, evidence capture | Reads/writes the core protocol through an adapter |
 | `q-one-life` | Personal ontology, reviews, local UI and integrations | User-owned private data; export is explicit |
 
-`q-one-core` is being built first so the agent layer has a stable, inspectable contract.
+`DecisionService` provides transactional product transitions: validation and append share one writer lock. The low-level `Ledger.append` remains a trusted-import primitive and does not enforce product transitions. These repositories are internal packages of one Q-One application, not three independent product implementations.
 
 ## Quick start
 
