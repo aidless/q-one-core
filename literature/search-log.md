@@ -48,3 +48,21 @@ Hugging Face 元数据核查对象：`convaiinnovations/laya`、`Qwen/Qwen3-8B`�
 没有对上述来源执行训练、模型推理或基准复现。检索结果的性能数字不作为 Q-One 的性能数字。
 
 元数据写入期间，一次尝试把大体积README作为命令参数传入，被操作系统以参数过长拒绝；未完成写入。随后改为按公开URL逐项交叉抓取，只保存摘要哈希到 `source-probes.json`。没有将第三方README全文提交到仓库。
+
+## 2026-10-25：人生内核与技术进阶
+
+引擎：web.run。搜索接口未给出可靠的总命中数，记为不可得；不以展示结果数冒充全网命中数。
+
+| 检索式 | 采用与用途 |
+|---|---|
+| `site.ianli.com stage based model personal informatics systems 2010` | 重读作者PDF的整合/反思阶段，S18 |
+| `site.donellameadows.org leverage points stocks flows delays feedback` | 作者档案，S20，概念来源 |
+| `site.pymoo.org multi objective constraint handling Pareto dominance` | 官方约束文档，S24，不宣称采用求解器 |
+| `site.danijar.com DreamerV3 mastering diverse domains world models Nature 2025` | 作者摘要与正式出版元数据；架构参考 |
+| `site.tdmpc2.com scalable robust world models TD-MPC2` | 作者页及arXiv号题核验；架构参考 |
+| `site.microsoft.com research contextual bandit doubly robust policy evaluation learning 2011` | 官方出版记录和作者PDF；界定未来策略评估条件 |
+| `site.cs.ubc.ca Murphy conjugate Bayesian linear regression normal inverse gamma` | 发现共轭分析材料，并定向阅读原授课者公开回归章节25.1–25.3 |
+
+定向读取 W3C PROV-O 与 Learning from data 第25章。Nature正文身份跳转不可访问，Dreamer项目页一次返回重定向占位；出版信息有搜索索引及作者摘要支持，未标记全文阅读。pymoo MCDM旧地址无法访问，未以该页支撑实现。
+
+新增来源笔记：`notes/adaptive-kernel-sources-2026-10-25.md`。本轮新来源尚未加入旧S01–S29登记编号，避免把旧登记条目数当作完整文献计数。

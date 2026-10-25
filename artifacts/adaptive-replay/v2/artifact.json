@@ -1,0 +1,42 @@
+{
+  "name": "adaptive-replay",
+  "version": 2,
+  "created_at": "2026-10-25T11:53:31.148186+00:00",
+  "producer": "Codex Q-One kernel implementation session 2026-10-25",
+  "command": "python scripts/evaluate_life_kernel.py",
+  "inputs": {
+    "generator": "examples/generate_adaptive_fixture.py",
+    "seeds": [
+      17,
+      29,
+      41
+    ],
+    "episodes_per_seed": 96,
+    "synthetic": true
+  },
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39"
+  },
+  "output_sha256": {
+    "adaptive-synthetic.json": "6aff6d13567e598186c3238abefc76ce8cc0fd3702a6bc6ac67c143f5d38cc30",
+    "adaptive.synthetic.json": "2bc8232f64ba3f22ad7fc4cb908c4bcd7c6cfa9af9c1e50e4813322cec139d10",
+    "evaluate_life_kernel.py": "126df2689172d8a9742ddd76382ee7cba56152e1c213c6b8d0f42d53681b689a",
+    "generate_adaptive_fixture.py": "1ebf61b056811595c549ac4dfe882b6c9c25e256256ec2f23ada6bc9dd5d8cce",
+    "source/__init__.py": "1775835811cebd11dc373559a4af990736a0dde33869c5b4fa068b773de19c81",
+    "source/adaptive.py": "4e79a212976aa1e368046387f34fb4e6689c285fff81d6e14f4fd0583abdae27",
+    "source/model.py": "b3394469aac0a1d3b352b28bc42fe1f67ae8f23869a0d72e9094f8ea3e172535",
+    "source/scenario.py": "3fa13c149f8f54de327943e62366993f6ed106c4e8552f22218fe9449678499b",
+    "source/state.py": "b888720995828111afbd699ad7ce8d4154f0163e40be2202425aaffe1d196588"
+  },
+  "reproduce": "run the command in the recorded environment; compare docs/evidence/adaptive-synthetic.json SHA-256 with adaptive-synthetic.json in this artifact",
+  "excluded_claims": [
+    "personal_benefit",
+    "causal_effect",
+    "policy_value",
+    "distribution_free_coverage"
+  ],
+  "change": "Bind executed action definitions to historical outcome episodes"
+}

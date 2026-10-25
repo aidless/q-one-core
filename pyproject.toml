@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "q-one-core"
-version = "0.2.0"
-description = "A local, auditable decision ledger for the Q-One quantified-life project."
+version = "0.3.0"
+description = "Personal state, adaptive transition prediction and auditable decision planning for Q-One."
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
@@ -13,6 +13,7 @@ authors = [{name = "Q-One contributors"}]
 dependencies = []
 
 [project.optional-dependencies]
+adaptive = ["numpy>=1.26,<3", "scipy>=1.11,<2"]
 dev = ["pytest>=8", "ruff>=0.5"]
 
 [project.scripts]

@@ -58,3 +58,14 @@ Do not commit personal decision logs, API keys, model outputs containing private
 ## Contributing
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md), keep protocol changes versioned, preserve failed or unknown outcomes, and describe evidence limits in pull requests. This project is released under the MIT License.
+
+## 人生决策内核 0.3
+
+新增有测量语义的个人状态、目标树、价值顺序、资源账户、延迟情景、多目标比较，以及从行动前后观察学习的贝叶斯变化预测。当前验证为合成回放，不代表真实人生收益。
+
+- [内核详细文档](docs/LIFE_KERNEL.zh-CN.md)
+- [技术进阶蓝图与接入条件](docs/ADVANCED_ROADMAP.zh-CN.md)
+- [合成回放逐条证据](docs/evidence/adaptive-synthetic.json)
+- [可运行的模型示例](examples/adaptive.synthetic.json)
+
+安装预测组件：`pip install '.[adaptive]'`；复现：`python scripts/evaluate_life_kernel.py`。
