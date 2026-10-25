@@ -94,3 +94,15 @@ Hugging Face 元数据核查对象：`convaiinnovations/laya`、`Qwen/Qwen3-8B`�
 | `site.riverml.xyz progressive validation delayed labels` | 官方River逐时/延迟评测源码；不把文档示例指标当Q-One指标 |
 
 GitHub连接器核查两仓库元数据、最新commit、最新发布记录与LICENSE；定向读取实现片段。ReBayes无release记录，README仍含早期发布计划，未据此宣称当前稳定。相关论文读取范围与采用边界见`notes/recency-2026-10-25.md`，版本与blob见`recency-source-probes.json`。未执行第三方实现、复制其代码或复现论文基准；自主实现候选仅用于冻结实验。
+
+## 2026-10-25 22UTC：长期结构与短期变化
+
+问题：上轮统一遗忘失败后，是否能将长期行动结构和短期状态演化分开，并正确处理晚到结果？引擎web.run与GitHub连接器；总命中数未提供。
+
+| 实际检索式 | 处理 |
+|---|---|
+| `GitHub official BONE Bayesian online nonstationary estimation framework 2025` | 作者gerdm/BONE与arXiv:2411.10153v3核对；真实题名为A unifying framework for generalised Bayesian online learning in non-stationary environments |
+| `site.github.com probml dynamax linear gaussian state space model missing observations` | 官方Dynamax仓库、API、固定实现片段与LICENSE；没有假定所有缺失/不规则/晚到情形均可直接处理 |
+| `site.riverml.xyz ADWIN drift detection regression prediction error` | 返回镜像与应用论文线索；未据此实现ADWIN或宣称检测收益，本轮选择显式动态模型 |
+
+Dynamax LICENSE.md猜测路径404，列官方树后改读LICENSE。BONE递归树和元数据未提供许可证，未复用代码。Dynamax README的JOSS2024与正式期刊页发表时间2025不一致，按正式页面记录。相关实现均只读；原型自主推导，未安装JAX或复现第三方基准。详细阅读范围和固定版本见`two-scale-source-probes.json`。

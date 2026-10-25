@@ -1,0 +1,29 @@
+{
+  "checked_at_utc": "2026-10-25T22:24:54.620119+00:00",
+  "same_runtime_replay_identical": true,
+  "frozen_source_tamper_probe": {
+    "exit_code": 1,
+    "reason": "frozen source mismatch: experiments/two_scale.py",
+    "output_created": false
+  },
+  "runtime_source_unchanged_vs": "66adb83b7895240ac70da3a02df4263addf354ba",
+  "personal_data_used": false,
+  "engineering_tests": {
+    "python3.10": 60,
+    "python3.12": 60,
+    "pytest_subtests_each": 4
+  },
+  "independent_audit": {
+    "prediction_opportunities": 6144,
+    "summary_cells": 96,
+    "candidate_passed_cells": 33,
+    "benchmark_eligible": false
+  },
+  "audit_injection_tests": [
+    "empty_index",
+    "incorrect_summary",
+    "missing_opportunity",
+    "false_adoption",
+    "changed_source"
+  ]
+}

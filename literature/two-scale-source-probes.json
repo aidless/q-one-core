@@ -1,0 +1,74 @@
+{
+  "checked_date": "2026-10-25",
+  "repositories": [
+    {
+      "repository": "probml/dynamax",
+      "commit": "ffc626bf89bf07c7ae7064922f6a373d013c4b17",
+      "license": "MIT",
+      "latest_release": {
+        "tag": "1.0.3",
+        "url": "https://github.com/probml/dynamax/releases/tag/1.0.3",
+        "published_at": "2026-10-13T15:01:36Z"
+      },
+      "read_files": [
+        {
+          "path": "README.md",
+          "read_lines": [
+            1,
+            150
+          ],
+          "blob_sha": "6a39332c1647625e6f633b5d6c079de0df6dd459"
+        },
+        {
+          "path": "LICENSE",
+          "read": "full",
+          "blob_sha": "b826f7961035600a1e2efb2addff67d7a91ea347"
+        },
+        {
+          "path": "dynamax/linear_gaussian_ssm/inference.py",
+          "read_lines": [
+            190,
+            318
+          ],
+          "blob_sha": "d2d7a12ba8d276c4ee22645d62d73f37315fb11b"
+        }
+      ],
+      "license_note": "Full LICENSE read; initial guessed LICENSE.md path returned404, corrected after tree listing",
+      "executed": false,
+      "external_code_copied": false
+    },
+    {
+      "repository": "gerdm/BONE",
+      "commit": "86c734a2063461e5eac7321de2454460ced6bfd1",
+      "license": null,
+      "latest_release": null,
+      "read_files": [
+        {
+          "path": "README.md",
+          "read": "full",
+          "blob_sha": "772322e5de486b89273d683324f078921ae21540"
+        }
+      ],
+      "license_note": "Metadata license null and no LICENSE path in recursive tree; no code copied, run or integrated",
+      "executed": false,
+      "external_code_copied": false
+    }
+  ],
+  "papers": [
+    {
+      "title": "A unifying framework for generalised Bayesian online learning in non-stationary environments",
+      "url": "https://arxiv.org/abs/2411.10153v3",
+      "read": "Abstract; selected HTML prior/OU/conjugate/LG sections, Table4 and electricity-regression section4.1.1; not full benchmark reproduction",
+      "publication_note": "arXiv metadata and author README list TMLR03/2025",
+      "data_scope": "Hour-ahead electricity-load/weather inputs; also listed synthetic drift classification and bandit experiments. Not a personal-life longitudinal benchmark; datasets not downloaded."
+    },
+    {
+      "title": "Dynamax: A Python package for probabilistic state space modeling with JAX",
+      "url": "https://joss.theoj.org/papers/10.21105/joss.07069",
+      "read": "Official publication page:03April2025, JOSS10(108)7069; README says JOSS2024 but publication page takes precedence"
+    }
+  ],
+  "search_engine": "web.run; GitHub connector for official metadata/fixed-source reads",
+  "search_total_hits": null,
+  "scope": "Independent math implementation only; neither BONE nor Dynamax reproduced"
+}
