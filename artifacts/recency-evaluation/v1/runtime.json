@@ -1,0 +1,10 @@
+{
+  "python": "3.12.3",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+  "libraries": {
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "pytest": "9.1.1"
+  },
+  "base_commit": "cf63131f6240d6418da7f9282f60f53d1e035a11"
+}

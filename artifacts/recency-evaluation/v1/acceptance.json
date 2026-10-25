@@ -1,0 +1,19 @@
+{
+  "checked_at_utc": "2026-10-25T17:23:46.231244+00:00",
+  "same_runtime_replay_identical": true,
+  "audited_prediction_rows": 5376,
+  "audited_summary_cells": 84,
+  "frozen_source_tamper_probe": {
+    "exit_code": 1,
+    "reason": "frozen source mismatch: experiments/recency_power.py",
+    "output_created": false
+  },
+  "engineering_tests": {
+    "python3.12": 46,
+    "python3.10": 46
+  },
+  "runtime_source_unchanged": true,
+  "personal_data_used": false,
+  "frozen_input_models": 21,
+  "runtime_source_unchanged_vs": "cf63131f6240d6418da7f9282f60f53d1e035a11"
+}

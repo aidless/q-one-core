@@ -1,0 +1,86 @@
+{
+  "checked_date": "2026-10-25",
+  "engine": "GitHub connector metadata and fixed-commit file reads; web.run paper and search",
+  "search_total_hits": null,
+  "repositories": [
+    {
+      "repository": "online-ml/river",
+      "url": "https://github.com/online-ml/river",
+      "commit": "b674b758518341bc5c343ca113f34903ba55020a",
+      "license": "BSD-3-Clause",
+      "latest_release": {
+        "tag": "0.26.1",
+        "published_at": "2026-08-21T15:25:35Z",
+        "url": "https://github.com/online-ml/river/releases/tag/0.26.1"
+      },
+      "read_files": [
+        {
+          "path": "river/linear_model/bayesian_lin_reg.py",
+          "blob_sha": "d50f9e268cb59cac04eb2f99435f8b52edbff6da",
+          "url": "https://github.com/online-ml/river/blob/b674b758518341bc5c343ca113f34903ba55020a/river/linear_model/bayesian_lin_reg.py",
+          "read_range": [
+            1,
+            260
+          ]
+        },
+        {
+          "path": "river/evaluate/progressive_validation.py",
+          "blob_sha": "bc0879cb4f2a6b29d0fdb6666a25a7a39094340f",
+          "url": "https://github.com/online-ml/river/blob/b674b758518341bc5c343ca113f34903ba55020a/river/evaluate/progressive_validation.py",
+          "read_range": [
+            1,
+            130
+          ]
+        },
+        {
+          "path": "LICENSE",
+          "blob_sha": "c3a351f973d0b1b38eadc6ae72917bfc5ce24f8e",
+          "url": "https://github.com/online-ml/river/blob/b674b758518341bc5c343ca113f34903ba55020a/LICENSE",
+          "read_range": null
+        }
+      ],
+      "executed": false,
+      "external_code_copied": false
+    },
+    {
+      "repository": "probml/rebayes",
+      "url": "https://github.com/probml/rebayes",
+      "commit": "3b880724541e913d7a7b2d06ee2e0407e66307ab",
+      "license": "MIT",
+      "latest_release": null,
+      "read_files": [
+        {
+          "path": "README.md",
+          "blob_sha": "dacf4ecbc6a717e102e93ca995e174b99fb0d6d9",
+          "url": "https://github.com/probml/rebayes/blob/3b880724541e913d7a7b2d06ee2e0407e66307ab/README.md",
+          "read_range": null
+        },
+        {
+          "path": "LICENSE",
+          "blob_sha": "6a5ba3019c2250e126166cfcfdcc9261791a83bb",
+          "url": "https://github.com/probml/rebayes/blob/3b880724541e913d7a7b2d06ee2e0407e66307ab/LICENSE",
+          "read_range": null
+        },
+        {
+          "path": "rebayes/extended_kalman_filter/ekf.py",
+          "blob_sha": "798b3a32d1b13b6de954b681fc3625686827f552",
+          "url": "https://github.com/probml/rebayes/blob/3b880724541e913d7a7b2d06ee2e0407e66307ab/rebayes/extended_kalman_filter/ekf.py",
+          "read_range": [
+            35,
+            145
+          ]
+        }
+      ],
+      "executed": false,
+      "external_code_copied": false
+    }
+  ],
+  "paper": {
+    "id": "2305.19535v3",
+    "title": "Low-rank extended Kalman filtering for online learning of neural networks from streaming data",
+    "url": "https://arxiv.org/abs/2305.19535v3",
+    "read": "Abstract; introduction; nonstationarity and hyperparameter sections via HTML. Not full-text reproduction.",
+    "executed": false
+  },
+  "ranking_claimed": false
+}

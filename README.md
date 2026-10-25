@@ -75,3 +75,9 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md), keep protocol changes versioned, preser
 新增延迟结果校准凭据、按行动组合分组的校准候选和冻结的稳定/突变对照。候选未通过全部采用条件，保持影子评测；自动推荐使用的区间不改变。
 
 [实验与采用决定](docs/CALIBRATION_EVALUATION.zh-CN.md) · [固定协议与逐条证据](artifacts/calibration-evaluation/v1/) · [官方来源核验](literature/calibration-source-probes.json)
+
+## 非平稳预测研究：日历遗忘候选
+
+加入按结果发生时间遗忘的独立原型，以及均值/噪声变化、不规则观察和结果延迟的冻结对照。候选未通过稳定与稀疏场景的采用条件，保留完整失败结果，自动推荐内核保持原版本。
+
+[评测结果、限制与复现](docs/RECENCY_EVALUATION.zh-CN.md) · [协议与逐条证据](artifacts/recency-evaluation/v1/) · [官方来源核验](literature/recency-source-probes.json)

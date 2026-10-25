@@ -82,3 +82,15 @@ Hugging Face 元数据核查对象：`convaiinnovations/laya`、`Qwen/Qwen3-8B`�
 普通GitHub关键词“SAOCP”检索命中无关仓库，未采用；随后从论文链接找到salesforce/online_conformal。SI-OCP由检索发现作者实验室页面并核对仓库元数据；一次arXiv链接点击失败，未写入未经核验的arXiv编号。
 
 来源版本与阅读范围：`calibration-source-probes.json`；方法采用结论：`notes/calibration-2026-10-25.md`。本轮自主实现方程和适配协议，不复制仓库实现、不引入MAPIE或SAOCP运行依赖；未宣称复现论文基准或达到最先进排名。
+
+## 2026-10-25：日历遗忘与非平稳结果预测
+
+问题：在旧均值迟滞的瓶颈下，按结果发生时间降低旧证据权重，能否同时改善预测并保留支持与区间质量？引擎web.run；总命中数未提供，不把展示条数当作总数。
+
+| 实际搜索式 | 处理 |
+|---|---|
+| `site.riverml.xyz BayesianLinearRegression smoothing` | 搜索返回非官方中文镜像，未作为论据；转官方online-ml/river固定源码核验 |
+| `site.github.com probml rebayes Bayesian online nonstationary` | 官方probml/rebayes；沿README论文链接核对arXiv号题 |
+| `site.riverml.xyz progressive validation delayed labels` | 官方River逐时/延迟评测源码；不把文档示例指标当Q-One指标 |
+
+GitHub连接器核查两仓库元数据、最新commit、最新发布记录与LICENSE；定向读取实现片段。ReBayes无release记录，README仍含早期发布计划，未据此宣称当前稳定。相关论文读取范围与采用边界见`notes/recency-2026-10-25.md`，版本与blob见`recency-source-probes.json`。未执行第三方实现、复制其代码或复现论文基准；自主实现候选仅用于冻结实验。
