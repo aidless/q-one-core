@@ -1,6 +1,8 @@
 from copy import deepcopy
 from datetime import datetime,timedelta,timezone
 import json
+import importlib.util
+import sys
 from pathlib import Path
 import runpy
 import pytest
@@ -125,7 +127,13 @@ def test_unit_conversion_preserves_normalized_calibration_and_point_model():
 
 
 def test_disabled_calibration_matches_frozen_03_predictions():
-    old=json.loads((Path(__file__).parents[1]/'artifacts/adaptive-replay/v2/adaptive-synthetic.json').read_text())['runs'][0]
+    # Frozen numeric files record a different SciPy runtime. Run the frozen
+    # implementation here so strict checks detect code changes, not t.ppf drift.
+    folder=Path(__file__).parents[1]/'artifacts/adaptive-replay/v2/source'
+    spec=importlib.util.spec_from_file_location('qone_frozen_03',folder/'__init__.py',submodule_search_locations=[str(folder)])
+    module=importlib.util.module_from_spec(spec);sys.modules[spec.name]=module
+    spec.loader.exec_module(module)
+    old=module.AdaptiveKernel(fixture()).replay()
     new=AdaptiveKernel(fixture()).replay()
     for a,b in zip(old['rows'],new['rows']):
         for key in ['predicted_delta','absolute_error','negative_log_predictive_density','predictive_width']:
