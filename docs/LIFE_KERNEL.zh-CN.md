@@ -124,3 +124,7 @@ python -m pytest -q
 - 当前模型编辑通过文件导入，仍需要更易用的观测和目标关系编辑器。
 
 验收必须先证明预测在冻结的真实历史窗口优于简单基线，再进行受控推荐试用。工程测试通过是运行条件，不能替代这项证据。
+
+## 0.4补充：校准候选保持影子模式
+
+`learning.calibration`可配置 `method=prequential_aci`、`step_size`、`window`、`min_samples`，用于历史对照。`forecast()`的权威上下界仍是原Student-t范围，候选写在 `candidate_interval`；`calibration.deployment=shadow_only`。这项隔离是因稳定场景改善而突变场景失败的实测结果，不是已经通过部署验证的校准策略。见 [本轮完整对照](CALIBRATION_EVALUATION.zh-CN.md)。

@@ -12,6 +12,7 @@ import math
 from .model import ModelError, fingerprint, instant, number
 from .scenario import ScenarioKernel
 from .state import check_condition, goal_states
+from .calibration import DelayedACI, calibration_config
 
 
 def learning_dependencies():
@@ -120,6 +121,9 @@ class AdaptiveKernel(ScenarioKernel):
                 raise ModelError('样本门槛应为2到4096的整数；门槛不是统计质量保证')
         if not 0 < number(c.get('predictive_mass',0.9)) < 1:
             raise ModelError('predictive_mass应在0与1之间')
+        self.calibration_config=calibration_config(c.get('calibration'))
+        self._raw_cache=None
+        self._calibration_cache={}
         self.episodes = self.model.get('episodes',[])
         if not isinstance(self.episodes,list) or len(self.episodes)>4096:
             raise ModelError('学习记录最多4096条')
@@ -206,6 +210,57 @@ class AdaptiveKernel(ScenarioKernel):
         self._cache[key]=result
         return result
 
+    def _raw_replay(self):
+        if self._raw_cache is not None:
+            return self._raw_cache
+        rows=[]
+        for e in sorted(self.episodes,key=lambda e:(instant(e['started_at']),e['id'])):
+            fit=self.fitted(e['started_at'])
+            values={f['measure_id']:self._point(self.index['observations'][e['before'][f['measure_id']]]['value']) for f in self.features}
+            x=self.vector(values,e['action_ids'])
+            for d in self.targets:
+                mid=d['measure_id']; before=self._point(self.index['observations'][e['before'][mid]]['value']); after=self._point(self.index['observations'][e['after'][mid]]['value'])
+                actual=after-before; reg=fit['models'][mid]; p=reg.predict(x,mass=self.config.get('predictive_mass',0.9))
+                nll=float(-reg.t.logpdf(actual/d['scale'],df=p['df'],loc=p['mean'],scale=p['scale'])+math.log(d['scale']))
+                rows.append({'episode_id':e['id'],'measure_id':mid,'unit':d['unit'],'training_n':len(fit['episodes']),
+                    'started_at':e['started_at'],'recorded_at':e['recorded_at'],'action_ids':sorted(e['action_ids']),
+                    'actual_delta':actual,'predicted_delta':p['mean']*d['scale'],'predictive_scale':p['scale']*d['scale'],
+                    'lower':p['lower']*d['scale'],'upper':p['upper']*d['scale'],
+                    'absolute_error':abs(actual-p['mean']*d['scale']),'no_change_absolute_error':abs(actual),
+                    'negative_log_predictive_density':nll,'density_basis':'base_student_t'})
+        self._raw_cache=rows
+        return rows
+
+    def calibration_history(self, as_of):
+        if self.calibration_config is None:
+            return None
+        cutoff=instant(as_of); key=cutoff.isoformat()
+        if key in self._calibration_cache:
+            return self._calibration_cache[key]
+        # Correction-invalidated episodes are not calibration evidence either.
+        valid={e['id'] for e in self.fitted(as_of)['episodes']}
+        events=[]; calibrators={}; issued={}
+        for row in self._raw_replay():
+            if row['episode_id'] not in valid or row['training_n']<self.config.get('min_samples',20):
+                continue
+            events.append((instant(row['started_at']),1,row))
+            events.append((instant(row['recorded_at']),0,row))
+        events.sort(key=lambda event:(event[0],event[1],event[2]['episode_id'],event[2]['measure_id']))
+        for at,kind,row in events:
+            group=(row['measure_id'],tuple(row['action_ids']))
+            if group not in calibrators:
+                c=self.calibration_config
+                calibrators[group]=DelayedACI(target_alpha=1-self.config.get('predictive_mass',0.9),step_size=c['step_size'],window=c['window'],min_samples=c['min_samples'])
+            cal=calibrators[group]; token=fingerprint({'episode_id':row['episode_id'],'measure_id':row['measure_id']})
+            if kind:
+                issued[token]=cal.issue(token,at.isoformat(),mean=row['predicted_delta'],scale=row['predictive_scale'])
+            else:
+                cal.observe(token,at.isoformat(),row['actual_delta'])
+        result={'calibrators':calibrators,'issued':issued}
+        if len(self._calibration_cache)>=16: self._calibration_cache.clear()
+        self._calibration_cache[key]=result
+        return result
+
     def forecast(self, actions, as_of):
         self._actions(actions)
         fit=self.fitted(as_of); state=self.snapshot(as_of); values={}; issues=[]
@@ -226,6 +281,7 @@ class AdaptiveKernel(ScenarioKernel):
             observed=[c[mid] for c in fit['contexts']]
             if observed and not min(observed)<=v<=max(observed):
                 issues.append({'code':'context_outside_observed_range','measure_id':mid})
+        history=self.calibration_history(as_of)
         predictions={}
         if len(values)==len(self.features):
             x=self.vector(values,actions)
@@ -233,7 +289,24 @@ class AdaptiveKernel(ScenarioKernel):
                 p=fit['models'][d['measure_id']].predict(x,mass=self.config.get('predictive_mass',0.9))
                 for k in ('mean','lower','upper','scale'): p[k]*=d['scale']
                 for k in ('noise_variance','parameter_variance'): p[k]*=d['scale']**2
-                p['unit']=d['unit']; predictions[d['measure_id']]=p
+                p['unit']=d['unit']; p['interval_method']='student_t'
+                if history is not None:
+                    group=(d['measure_id'],tuple(sorted(actions)))
+                    cal=history['calibrators'].get(group)
+                    if cal is None:
+                        c=self.calibration_config
+                        cal=DelayedACI(target_alpha=1-self.config.get('predictive_mass',0.9),step_size=c['step_size'],window=c['window'],min_samples=c['min_samples'])
+                    calibrated=cal.interval()
+                    # Frozen benchmark rejected general deployment. Candidate bands
+                    # remain diagnostic and cannot change recommendation authority.
+                    calibrated['deployment']='shadow_only'
+                    p['calibration']=calibrated
+                    if calibrated['status']=='ready':
+                        radius=calibrated['radius']*p['scale']
+                        p['candidate_interval']={'lower':p['mean']-radius,'upper':p['mean']+radius}
+                    else:
+                        p['candidate_interval']=None
+                predictions[d['measure_id']]=p
         return {'status':'supported_prediction' if not issues else 'abstain','issues':issues,'predictions':predictions,
                 'training_episode_ids':[e['id'] for e in fit['episodes']], 'training_n':n,'portfolio_support':support,
                 'model_sha256':self.model_sha256,'feature_names':self.feature_names,
@@ -256,7 +329,7 @@ class AdaptiveKernel(ScenarioKernel):
         states=row['trajectory'][-1]['states']; current=self.snapshot(as_of)['measures']
         for mid in targets:
             p=forecast['predictions'].get(mid); initial=current[mid]
-            if p and initial['status']=='known':
+            if p and p['lower'] is not None and initial['status']=='known':
                 states[mid]['value']={'lower':initial['value']['lower']+p['lower'],'upper':initial['value']['upper']+p['upper']}
                 states[mid]['status']='known'; states[mid]['basis']='bayesian_transition_prediction'
                 m=self.index['measures'][mid]; bounds=m.get('bounds')
@@ -279,28 +352,37 @@ class AdaptiveKernel(ScenarioKernel):
         return row
 
     def replay(self):
-        """Predict each historical outcome using only earlier available evidence."""
+        """Prequential reconstruction; prediction intervals never use later labels."""
         rows=[]
-        for e in sorted(self.episodes,key=lambda e:(instant(e['started_at']),e['id'])):
-            fit=self.fitted(e['started_at'])
-            values={f['measure_id']:self._point(self.index['observations'][e['before'][f['measure_id']]]['value']) for f in self.features}
-            x=self.vector(values,e['action_ids'])
-            for d in self.targets:
-                mid=d['measure_id']; before=self._point(self.index['observations'][e['before'][mid]]['value']); after=self._point(self.index['observations'][e['after'][mid]]['value'])
-                actual=after-before; reg=fit['models'][mid]; p=reg.predict(x,mass=self.config.get('predictive_mass',0.9))
-                target=actual/d['scale']
-                nll=float(-reg.t.logpdf(target,df=p['df'],loc=p['mean'],scale=p['scale'])+math.log(d['scale']))
-                rows.append({'episode_id':e['id'],'measure_id':mid,'unit':d['unit'],'training_n':len(fit['episodes']),
-                    'actual_delta':actual,'predicted_delta':p['mean']*d['scale'],
-                    'absolute_error':abs(actual-p['mean']*d['scale']),'no_change_absolute_error':abs(actual),
-                    'negative_log_predictive_density':nll,'interval_contains_observation':p['lower']<=target<=p['upper'],
-                    'predictive_width':(p['upper']-p['lower'])*d['scale']})
+        horizon=max((e['recorded_at'] for e in self.episodes),key=instant,default=None)
+        history=self.calibration_history(horizon) if horizon else None
+        alpha=1-self.config.get('predictive_mass',0.9)
+        for raw in self._raw_replay():
+            row=dict(raw); lower,upper=row['lower'],row['upper']
+            if history is not None:
+                receipt=history['issued'].get(fingerprint({'episode_id':row['episode_id'],'measure_id':row['measure_id']}))
+                row['calibration']=receipt
+                if receipt and receipt['status']=='ready':
+                    radius=receipt['radius']*row['predictive_scale']
+                    lower,upper=row['predicted_delta']-radius,row['predicted_delta']+radius
+                else:
+                    lower=upper=None
+            row['lower'],row['upper']=lower,upper
+            finite=lower is not None and upper is not None
+            actual=row['actual_delta']
+            row['interval_contains_observation']=lower<=actual<=upper if finite else None
+            row['predictive_width']=upper-lower if finite else None
+            row['interval_score']=(upper-lower+2/alpha*max(0,lower-actual,actual-upper)) if finite else None
+            rows.append(row)
         summary={}
         for d in self.targets:
             rs=[r for r in rows if r['measure_id']==d['measure_id'] and r['training_n']>=self.config.get('min_samples',20)]
-            summary[d['measure_id']]={'n':len(rs),'unit':d['unit']}
-            if rs:
-                for out,field in [('mae','absolute_error'),('no_change_mae','no_change_absolute_error'),('mean_nlpd','negative_log_predictive_density'),('observed_coverage','interval_contains_observation'),('mean_width','predictive_width')]:
-                    summary[d['measure_id']][out]=sum(r[field] for r in rs)/len(rs)
+            finite=[r for r in rs if r['predictive_width'] is not None]
+            summary[d['measure_id']]={'n':len(rs),'finite_interval_n':len(finite),'abstained_n':len(rs)-len(finite),'unit':d['unit']}
+            for out,field,pool in [('mae','absolute_error',rs),('no_change_mae','no_change_absolute_error',rs),('mean_nlpd','negative_log_predictive_density',rs),('observed_coverage','interval_contains_observation',finite),('mean_width','predictive_width',finite),('mean_interval_score','interval_score',finite)]:
+                if pool: summary[d['measure_id']][out]=sum(r[field] for r in pool)/len(pool)
         return {'rows':rows,'summary':summary,'protocol':'predict_at_episode_start_using_only_recorded_outcomes',
-                'model_sha256':self.model_sha256,'policy_value_estimated':False,'causal_effect_estimated':False}
+                'interval_method':'prequential_aci_shadow' if history is not None else 'student_t',
+                'used_for_recommendations':False if history is not None else None,'density_basis':'base_student_t',
+                'model_sha256':self.model_sha256,'policy_value_estimated':False,'causal_effect_estimated':False,
+                'coverage_guarantee':False}

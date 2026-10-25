@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "frozen_before_benchmark": true,
+  "date": "2026-10-25",
+  "baseline_commit": "168c6883e82acef1834d5e63ac782a27e8ef04bc",
+  "synthetic": true,
+  "seeds": [17, 29, 41],
+  "episodes": 128,
+  "evaluation_start_episode": 64,
+  "scenarios": ["stationary", "mean_shift", "noise_shift"],
+  "shift_at_episode": 64,
+  "methods": {
+    "student_t": null,
+    "rolling": {"method": "prequential_aci", "step_size": 0, "window": 64, "min_samples": 10},
+    "aci": {"method": "prequential_aci", "step_size": 0.01, "window": 64, "min_samples": 10}
+  },
+  "target_coverage": 0.9,
+  "default_adoption_gate": {
+    "scope": "Every seed, scenario and target, not only pooled averages",
+    "finite_interval_rate_at_least": 0.9,
+    "observed_coverage_at_least": 0.85,
+    "paired_mean_interval_score_no_worse_than_baseline": true,
+    "point_predictions_unchanged": true
+  },
+  "comparison": "Same evaluation IDs. Report all abstentions; paired width/coverage/interval-score only on finite candidate intervals and show paired baseline on those identical IDs.",
+  "policy_value_estimated": false,
+  "causal_effect_estimated": false,
+  "distribution_free_coverage_claimed": false,
+  "tuning": "No seed, scenario, step size, warmup, window or adoption threshold search after reading outcomes. Gate failure keeps default off."
+}

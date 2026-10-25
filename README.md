@@ -69,3 +69,9 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md), keep protocol changes versioned, preser
 - [可运行的模型示例](examples/adaptive.synthetic.json)
 
 安装预测组件：`pip install '.[adaptive]'`；复现：`python scripts/evaluate_life_kernel.py`。
+
+## 在线校准影子评测 0.4
+
+新增延迟结果校准凭据、按行动组合分组的校准候选和冻结的稳定/突变对照。候选未通过全部采用条件，保持影子评测；自动推荐使用的区间不改变。
+
+[实验与采用决定](docs/CALIBRATION_EVALUATION.zh-CN.md) · [固定协议与逐条证据](artifacts/calibration-evaluation/v1/) · [官方来源核验](literature/calibration-source-probes.json)

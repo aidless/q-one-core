@@ -66,3 +66,19 @@ Hugging Face 元数据核查对象：`convaiinnovations/laya`、`Qwen/Qwen3-8B`�
 定向读取 W3C PROV-O 与 Learning from data 第25章。Nature正文身份跳转不可访问，Dreamer项目页一次返回重定向占位；出版信息有搜索索引及作者摘要支持，未标记全文阅读。pymoo MCDM旧地址无法访问，未以该页支撑实现。
 
 新增来源笔记：`notes/adaptive-kernel-sources-2026-10-25.md`。本轮新来源尚未加入旧S01–S29登记编号，避免把旧登记条目数当作完整文献计数。
+
+## 2026-10-25：在线校准技术对照迭代
+
+问题：现有 Student-t 范围在合成回放中过宽，能否通过仅使用已知结果的在线校准改善范围质量，并在突变场景通过同样的采用条件？
+
+引擎：web.run 与 GitHub 连接器；总命中数未提供，记为不可得。
+
+| 检索式 | 采用来源与范围 |
+|---|---|
+| `adaptive conformal inference distribution shift official github Gibbs Candes ACI` | NeurIPS 2021原文、arXiv号题核对；读取公式(2)和长期/单时点覆盖区别 |
+| `strongly adaptive online conformal prediction official GitHub SAOCP` | arXiv:2302.07869摘要、方法引言、论文内官方GitHub链接 |
+| `MAPIE time series adaptive conformal inference official github latest release` | GitHub官方元数据、最新发布版v1.6.0、固定commit的ACI更新方法与LICENSE |
+
+普通GitHub关键词“SAOCP”检索命中无关仓库，未采用；随后从论文链接找到salesforce/online_conformal。SI-OCP由检索发现作者实验室页面并核对仓库元数据；一次arXiv链接点击失败，未写入未经核验的arXiv编号。
+
+来源版本与阅读范围：`calibration-source-probes.json`；方法采用结论：`notes/calibration-2026-10-25.md`。本轮自主实现方程和适配协议，不复制仓库实现、不引入MAPIE或SAOCP运行依赖；未宣称复现论文基准或达到最先进排名。

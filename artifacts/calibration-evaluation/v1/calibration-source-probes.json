@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-25",
+  "queries": [
+    "adaptive conformal inference distribution shift official github Gibbs Candes ACI",
+    "strongly adaptive online conformal prediction official GitHub SAOCP",
+    "MAPIE time series adaptive conformal inference official github latest release"
+  ],
+  "engine": "web.run and connected GitHub",
+  "repositories": [
+    {
+      "repo": "scikit-learn-contrib/MAPIE",
+      "commit": "f1cc3d07460b2d7198f557d40d60cd563c51822b",
+      "latest_release": "v1.6.0",
+      "release_date": "2026-10-19T09:41:05Z",
+      "license": "BSD-3-Clause",
+      "code_blob": "5582d41905998f3ea38b8a3cae2c3d71c18bfbc0",
+      "read": [
+        "mapie/regression/time_series_regression.py:adapt_conformal_inference",
+        "LICENSE"
+      ],
+      "adoption": "Mathematical comparison only; no source copied and no MAPIE runtime dependency"
+    },
+    {
+      "repo": "salesforce/online_conformal",
+      "commit": "95790a9b9e4061166e6d7a8a13282e019b1a8663",
+      "license": "Apache-2.0 (repository metadata)",
+      "read": [
+        "README.md",
+        "paper abstract, method introduction"
+      ],
+      "adoption": "Reference candidate; no SAOCP reproduction or implementation claim"
+    },
+    {
+      "repo": "dcherenson/staggered-integral-ocp",
+      "commit": "25fd56283b37849a08c859ab5be9a345bb2bfcb2",
+      "license": null,
+      "read": [
+        "repository metadata",
+        "author laboratory abstract"
+      ],
+      "adoption": "Not integrated; control-specific model assumptions and no declared repository license"
+    }
+  ],
+  "papers": [
+    {
+      "title": "Adaptive Conformal Inference Under Distribution Shift",
+      "url": "https://arxiv.org/abs/2106.00170v3",
+      "authors": [
+        "Isaac Gibbs",
+        "Emmanuel Candes"
+      ],
+      "venue": "NeurIPS 2021",
+      "read": "abstract, update equation (2), long-run and marginal coverage distinction"
+    },
+    {
+      "title": "Improved Online Conformal Prediction via Strongly Adaptive Online Learning",
+      "url": "https://arxiv.org/abs/2302.07869",
+      "authors": [
+        "Aadyot Bhatnagar",
+        "Huan Wang",
+        "Caiming Xiong",
+        "Yu Bai"
+      ],
+      "read": "abstract, introduction and official implementation link; conference metadata not reverified"
+    },
+    {
+      "title": "Staggered Integral Online Conformal Prediction for Safe Dynamics Adaptation with Multi-Step Coverage Guarantees",
+      "url": "https://dasc-lab.github.io/papers/2026/2026-siocp/",
+      "authors": [
+        "Daniel Cherenson",
+        "Dimitra Panagou"
+      ],
+      "read": "author laboratory abstract; page labels IEEE CDC 2026, not independently verified as a published proceeding"
+    }
+  ],
+  "unavailable_or_excluded": [
+    "General GitHub SAOCP text search returned unrelated repositories; official repository resolved from paper link",
+    "One web click for SI-OCP arXiv link failed; no unverified arXiv ID stored"
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "name": "calibration-evaluation",
+  "version": 1,
+  "created_at": "2026-10-25T13:33:55.711080+00:00",
+  "producer": "Codex Q-One iteration 2026-10-25",
+  "command": "python scripts/evaluate_calibration.py",
+  "inputs": {
+    "protocol": "protocol.json",
+    "protocol_sha256": "19082f7bced2187075daffa31138eb56cc7fc7f1ee252e74101b8c55e6c4121a",
+    "models": [
+      {
+        "seed": 17,
+        "scenario": "stationary",
+        "model_sha256": "7f14edaba603c026075f3e083377fccf118a1ed88f4e0ce30f4c472ece647ea9"
+      },
+      {
+        "seed": 17,
+        "scenario": "mean_shift",
+        "model_sha256": "ca1ec4fa0824805de5149e1d1d26340dcc52d277c2d032fc22dcb376b2cc716a"
+      },
+      {
+        "seed": 17,
+        "scenario": "noise_shift",
+        "model_sha256": "c93c42ec46b1cbcb37e90c71322dd79da8d58394a0da3c136fc462265940bce4"
+      },
+      {
+        "seed": 29,
+        "scenario": "stationary",
+        "model_sha256": "9d1fbbbe8cd0c8cf7ac61fc30a42a23c0ce192bae08bbb240946e2b7c0acc427"
+      },
+      {
+        "seed": 29,
+        "scenario": "mean_shift",
+        "model_sha256": "bf900f7d86bb8adfc5c90a31fed20255c01188693a03a4b4097812d0bad91bf8"
+      },
+      {
+        "seed": 29,
+        "scenario": "noise_shift",
+        "model_sha256": "5e3d1bb083317bfe227e7ec37553427ce6ab83cd56222b2d79c17f473959b16e"
+      },
+      {
+        "seed": 41,
+        "scenario": "stationary",
+        "model_sha256": "65ebdaab3b612a5fc5a2b835a2e92eef1058c24251759700bfeeb0d855e5d2f5"
+      },
+      {
+        "seed": 41,
+        "scenario": "mean_shift",
+        "model_sha256": "b4c33adcad338f0ad667d910419efac953a5e8571fb8fdf277387f9d2584ee4e"
+      },
+      {
+        "seed": 41,
+        "scenario": "noise_shift",
+        "model_sha256": "ce7812f04e1221c82e1911ec9524bc68d4be537c31be769b965ba894c3f0b923"
+      }
+    ]
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.2",
+    "scipy": "1.18.1"
+  },
+  "baseline_commit": "168c6883e82acef1834d5e63ac782a27e8ef04bc",
+  "default_adoption": false,
+  "deployment": "shadow_only",
+  "output_sha256": {
+    "calibration-source-probes.json": "320cc3c3587b7a3471897bb8ec3da573cbb8e4180d59f1c518b945192e0fe0c5",
+    "evaluate_calibration.py": "52d8b9868aee5025dae6fffef4edeb122a0e65ee471d51ceb59a2c69d3c4fc2c",
+    "generate_adaptive_fixture.py": "1ebf61b056811595c549ac4dfe882b6c9c25e256256ec2f23ada6bc9dd5d8cce",
+    "predictions.jsonl": "ac3fbc61f22719db458cac15f65372eff64cdb6d275e24caa4ac6cfce96ebf10",
+    "protocol.json": "19082f7bced2187075daffa31138eb56cc7fc7f1ee252e74101b8c55e6c4121a",
+    "results.json": "a32ad4c746e44bca0d6c6bd426feb64ea1cbea64a9606608699610af1bc89fa6",
+    "source/__init__.py": "1775835811cebd11dc373559a4af990736a0dde33869c5b4fa068b773de19c81",
+    "source/adaptive.py": "98dc14f9c4fc6e02b1a4c14288e36bae931ba42ba4b5a15c4d9c108a086c2e86",
+    "source/calibration.py": "dd7aca1d2b0b970e50e7cd4927bed04927ae66dff1add0ba532eb9e894f57528",
+    "source/model.py": "b3394469aac0a1d3b352b28bc42fe1f67ae8f23869a0d72e9094f8ea3e172535",
+    "source/scenario.py": "3fa13c149f8f54de327943e62366993f6ed106c4e8552f22218fe9449678499b",
+    "source/state.py": "b888720995828111afbd699ad7ce8d4154f0163e40be2202425aaffe1d196588"
+  },
+  "source_sha256": {
+    "src/qone_core/life/__init__.py": "1775835811cebd11dc373559a4af990736a0dde33869c5b4fa068b773de19c81",
+    "src/qone_core/life/adaptive.py": "98dc14f9c4fc6e02b1a4c14288e36bae931ba42ba4b5a15c4d9c108a086c2e86",
+    "src/qone_core/life/calibration.py": "dd7aca1d2b0b970e50e7cd4927bed04927ae66dff1add0ba532eb9e894f57528",
+    "src/qone_core/life/model.py": "b3394469aac0a1d3b352b28bc42fe1f67ae8f23869a0d72e9094f8ea3e172535",
+    "src/qone_core/life/scenario.py": "3fa13c149f8f54de327943e62366993f6ed106c4e8552f22218fe9449678499b",
+    "src/qone_core/life/state.py": "b888720995828111afbd699ad7ce8d4154f0163e40be2202425aaffe1d196588"
+  },
+  "notes": "Rerun after diagnostic-only isolation produced byte-identical benchmark results and predictions. Frozen before benchmark means local protocol freeze, not external preregistration."
+}
