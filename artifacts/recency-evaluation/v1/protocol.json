@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "frozen_at_utc": "2026-10-25T17:20:11.202446+00:00",
+  "freeze_scope": "Local protocol and source hashes frozen before first performance run; not externally preregistered",
+  "baseline_commit": "cf63131f6240d6418da7f9282f60f53d1e035a11",
+  "synthetic": true,
+  "seeds": [
+    73,
+    101,
+    137
+  ],
+  "episodes": 128,
+  "evaluation_start_episode": 64,
+  "shift_at_episode": 64,
+  "scenarios": [
+    "stationary",
+    "mean_shift",
+    "noise_shift",
+    "gradual_shift",
+    "return_shift",
+    "delayed_mean_shift",
+    "irregular_delayed_mean_shift"
+  ],
+  "scenario_definitions": {
+    "stationary": "Unmodified same regression-family synthetic fixture",
+    "mean_shift": "After episode64: practice +6 items, work -4 items, on top of original noise",
+    "noise_shift": "After episode64: extra Gaussian(0,4) items, fixed RNG seed+30000",
+    "gradual_shift": "Mean shift linearly from 1/32 to full magnitude over episodes64..95, then fixed",
+    "return_shift": "Mean shift only episodes64..95, then return to original generator",
+    "delayed_mean_shift": "Mean shift with 7-day label delay on every fifth episode",
+    "irregular_delayed_mean_shift": "Mean shift + same delay; starts separated by repeating [2,3,5,2,4] days and an extra40-day gap before episode64; no overlapping outcome windows"
+  },
+  "methods": [
+    "lifetime",
+    "recency"
+  ],
+  "half_life_days": 32,
+  "selection_reason": "Single approximate-month calendar heuristic, not chosen by benchmark performance; no sweep",
+  "likelihood": "Original fixed prior times product of Gaussian likelihoods raised to 2**(-(as_of-ended_at)/32days); original observation noise model and Student-t marginal",
+  "support": "All original gates plus weight_mass>=min_samples and exact-portfolio weight_mass>=min_portfolio_samples. Report weight concentration ESS separately; it is not independent sample size or a support substitute.",
+  "cell_gate": {
+    "scope": "Every seed/scenario/target",
+    "finite_rate_at_least": 0.9,
+    "paired_rate_at_least": 0.9,
+    "coverage_at_least": 0.85,
+    "paired_mae_ratio_at_most": 1.05,
+    "paired_interval_score_ratio_at_most": 1.05
+  },
+  "gain_scenarios": [
+    "mean_shift",
+    "gradual_shift",
+    "delayed_mean_shift",
+    "irregular_delayed_mean_shift"
+  ],
+  "aggregate_shift_mae_ratio_at_most": 0.9,
+  "comparison": "Issue forecasts at episode started_at using only labels recorded by that time. Never score diagnostic numbers on abstentions. Paired scores share exactly the supported episode IDs; fixed-schedule finite rate reported separately. Summary improvement cannot override any failed cell.",
+  "evaluation_limit": "Synthetic generator already known and deliberately close to linear feature family. New seeds reduce reuse of previous outcomes; they do not make an independent personal benchmark. No power analysis or confidence/coverage guarantee.",
+  "adoption": "Necessary gates only. Research module excluded from runtime; keep default unchanged even if synthetic gates pass until external/future-data validation exists.",
+  "tuning": "No half-life/seed/scenario/support/threshold changes after observing benchmark. Any change requires v2; retain failed results.",
+  "source_sha256": {
+    "src/qone_core/__init__.py": "bc767dfc295e4db093e9bbad0f2ebff79ffaea61398e405f089e112e5a96b0b6",
+    "src/qone_core/__main__.py": "307299fda7b77d22c64cb51430ec75e5f59d78e9c948786afb3b2544fe45e4b7",
+    "src/qone_core/cli.py": "bbb81211efba3a16d173970bfe42ef276990eafebbaab274af5fc1035899c488",
+    "src/qone_core/gate.py": "9fa2088b50b2b8432d48d1af9e787745e54bbf6af9bbca453c1dd970e52cc3f3",
+    "src/qone_core/ledger.py": "75b797fe83b5fcf85b379362124c566435d0eb27acd768acc8ec065d5e1e1ac1",
+    "src/qone_core/life/__init__.py": "1775835811cebd11dc373559a4af990736a0dde33869c5b4fa068b773de19c81",
+    "src/qone_core/life/adaptive.py": "98dc14f9c4fc6e02b1a4c14288e36bae931ba42ba4b5a15c4d9c108a086c2e86",
+    "src/qone_core/life/calibration.py": "dd7aca1d2b0b970e50e7cd4927bed04927ae66dff1add0ba532eb9e894f57528",
+    "src/qone_core/life/model.py": "b3394469aac0a1d3b352b28bc42fe1f67ae8f23869a0d72e9094f8ea3e172535",
+    "src/qone_core/life/scenario.py": "3fa13c149f8f54de327943e62366993f6ed106c4e8552f22218fe9449678499b",
+    "src/qone_core/life/state.py": "b888720995828111afbd699ad7ce8d4154f0163e40be2202425aaffe1d196588",
+    "src/qone_core/models.py": "25a8113b08708fc0aedf493be945db1348e8ca0b6ba4f52b510f47e17d787952",
+    "src/qone_core/report.py": "e93ffbf6c1b24b97548d31faeec601bcd4b58d1b91e607c5ecb8953387c513de",
+    "src/qone_core/service.py": "a47cd02ccabf05428bed29615e154eab229c672790268543fe218f8039751014",
+    "experiments/recency_power.py": "e70b53e08cda9279650d0e38aa4e702352ee3a3fa7c8eaee11ed6b2d15d1d2fb",
+    "scripts/evaluate_recency.py": "342dbd95969f59aba7d16fcbc38b07af7191ab6ce57670bdb43132d68bc87e46",
+    "examples/generate_adaptive_fixture.py": "1ebf61b056811595c549ac4dfe882b6c9c25e256256ec2f23ada6bc9dd5d8cce"
+  }
+}
