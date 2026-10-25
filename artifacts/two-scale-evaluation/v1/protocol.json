@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "frozen_at_utc": "2026-10-25T22:20:16.707109+00:00",
+  "freeze_scope": "Local protocol/source commit before performance run; not external preregistration",
+  "baseline_commit": "66adb83b7895240ac70da3a02df4263addf354ba",
+  "synthetic": true,
+  "seeds": [
+    211,
+    307,
+    401
+  ],
+  "episodes": 128,
+  "evaluation_start_episode": 64,
+  "shift_at_episode": 64,
+  "scenarios": [
+    "stationary",
+    "mean_shift",
+    "noise_shift",
+    "gradual_shift",
+    "return_shift",
+    "delayed_mean_shift",
+    "irregular_delayed_mean_shift",
+    "action_effect_shift"
+  ],
+  "scenario_source": "Seven scenarios identical to frozen recency v1 generator, with new seeds; action_effect_shift adds +6 practice only when study executed and -4 work only when build executed after episode64. This is a negative control against a globally shared transient-offset assumption, not a change of recorded action definitions.",
+  "methods": [
+    "lifetime",
+    "two_scale"
+  ],
+  "candidate_parameters": {
+    "half_life_days": 16,
+    "transient_variance": 1.0
+  },
+  "parameter_reason": "Single approximately-fortnight calendar time scale and transient stationary variance equal to the common observation noise scale; explicit modelling heuristics, no outcome-based search",
+  "model": "y_e = x_e^T b + z(ended_at_e) + epsilon_e. Fixed b Gaussian prior precision1; z stationary zero-mean OU, rho=2**(-elapsed_days/16), Q=(1-rho**2)*1. All covariance terms share sigma2 with inverse-gamma(alpha=2,beta=1). Static-transient cross covariance retained. Marginal predictive Student-t at as_of+one-day horizon.",
+  "knowledge_protocol": "Only correction-valid episode labels recorded_at<=issue cutoff. Rebuild filter in ended_at order for every cutoff, including late labels at their physical event times. Forecast beyond final eligible outcome; never use offline smoothing or label arrival as physical time.",
+  "support": "Keep all original history, exact portfolio, context-known/range and target-baseline gates. No forced history decay, no relaxed thresholds. A supported forecast is not certification of current-regime relevance.",
+  "cell_gate": {
+    "scope": "Every seed/scenario/target separately",
+    "finite_rate_at_least": 0.9,
+    "paired_rate_at_least": 0.9,
+    "coverage_at_least": 0.85,
+    "paired_mae_ratio_at_most": 1.05,
+    "paired_interval_score_ratio_at_most": 1.05
+  },
+  "gain_scenarios": [
+    "mean_shift",
+    "gradual_shift",
+    "delayed_mean_shift",
+    "irregular_delayed_mean_shift"
+  ],
+  "aggregate_shift_mae_ratio_at_most": 0.9,
+  "comparison": "All 64 scheduled opportunities per target/method. Abstentions remain in availability denominator, and have null scores. Scores pair exactly the same supported episode IDs. Report MAE, interval width/coverage/score and marginal Student-t NLPD; no density claim for unmodelled joint outcomes. Aggregate gain cannot override any failed cell.",
+  "no_adoption_without": "All benchmark gates plus evidence outside the known synthetic family. Prototype remains excluded from production package; no real person, identified latent life state, causal effect, policy value, calibrated coverage, or SOTA claim.",
+  "limitations": "Single common variance cannot separately adapt noise drift; OU is an unverified model for one additive offset, not evidence of physiological/psychological state or long-term skill dynamics. Long static component may be obsolete; raw support checks cannot establish absence of drift.",
+  "tuning": "No parameter, seed, scenario, source or gate change after reading results. Changes require v2 and preservation of failures.",
+  "source_sha256": {
+    "src/qone_core/__init__.py": "bc767dfc295e4db093e9bbad0f2ebff79ffaea61398e405f089e112e5a96b0b6",
+    "src/qone_core/__main__.py": "307299fda7b77d22c64cb51430ec75e5f59d78e9c948786afb3b2544fe45e4b7",
+    "src/qone_core/cli.py": "bbb81211efba3a16d173970bfe42ef276990eafebbaab274af5fc1035899c488",
+    "src/qone_core/gate.py": "9fa2088b50b2b8432d48d1af9e787745e54bbf6af9bbca453c1dd970e52cc3f3",
+    "src/qone_core/ledger.py": "75b797fe83b5fcf85b379362124c566435d0eb27acd768acc8ec065d5e1e1ac1",
+    "src/qone_core/life/__init__.py": "1775835811cebd11dc373559a4af990736a0dde33869c5b4fa068b773de19c81",
+    "src/qone_core/life/adaptive.py": "98dc14f9c4fc6e02b1a4c14288e36bae931ba42ba4b5a15c4d9c108a086c2e86",
+    "src/qone_core/life/calibration.py": "dd7aca1d2b0b970e50e7cd4927bed04927ae66dff1add0ba532eb9e894f57528",
+    "src/qone_core/life/model.py": "b3394469aac0a1d3b352b28bc42fe1f67ae8f23869a0d72e9094f8ea3e172535",
+    "src/qone_core/life/scenario.py": "3fa13c149f8f54de327943e62366993f6ed106c4e8552f22218fe9449678499b",
+    "src/qone_core/life/state.py": "b888720995828111afbd699ad7ce8d4154f0163e40be2202425aaffe1d196588",
+    "src/qone_core/models.py": "25a8113b08708fc0aedf493be945db1348e8ca0b6ba4f52b510f47e17d787952",
+    "src/qone_core/report.py": "e93ffbf6c1b24b97548d31faeec601bcd4b58d1b91e607c5ecb8953387c513de",
+    "src/qone_core/service.py": "a47cd02ccabf05428bed29615e154eab229c672790268543fe218f8039751014",
+    "examples/generate_adaptive_fixture.py": "1ebf61b056811595c549ac4dfe882b6c9c25e256256ec2f23ada6bc9dd5d8cce",
+    "experiments/recency_power.py": "e70b53e08cda9279650d0e38aa4e702352ee3a3fa7c8eaee11ed6b2d15d1d2fb",
+    "scripts/evaluate_recency.py": "342dbd95969f59aba7d16fcbc38b07af7191ab6ce57670bdb43132d68bc87e46",
+    "experiments/two_scale.py": "545505cb3831f45d627e86d42276db4e32167fdc141b23f6289a1264d589a9a5",
+    "scripts/evaluate_two_scale.py": "f2cac49ca7dcbafa07f98b1cbad987321239f168b92b645459cacc6cdb251fc1"
+  }
+}
