@@ -1,0 +1,80 @@
+{
+  "adoption_scope": "evidence eligibility correction only, unchanged Bayesian regression and shadow calibration",
+  "as_of": "2026-10-26T00:00:00Z",
+  "baseline_commit": "13271f997c1ad63801b7f4de516d58626a415bfc",
+  "cases": [
+    "clean.seed17",
+    "clean.seed29",
+    "clean.seed41",
+    "late_outcome_conflict",
+    "late_before_conflict",
+    "known_before_conflict",
+    "older_before_reference",
+    "equal_duplicate",
+    "superseded_outcome",
+    "unrelated_conflict",
+    "future_conflict"
+  ],
+  "created_at": "2026-10-26T08:12:42.664Z",
+  "excluded_episode_by_case": {
+    "known_before_conflict": [
+      "e25"
+    ],
+    "late_before_conflict": [
+      "e25"
+    ],
+    "late_outcome_conflict": [
+      "e25"
+    ],
+    "older_before_reference": [
+      "e25"
+    ],
+    "superseded_outcome": [
+      "e25"
+    ]
+  },
+  "gates": [
+    "same-runtime exact prediction and replay numeric equality on all three clean inputs and equal-valued duplicates",
+    "ambiguous, superseded and non-current before references excluded atomically from fitting and final replay with explicit reasons and denominators",
+    "future evidence cannot change past prediction or evidence qualification",
+    "below support threshold abstains; no resource, ordinal, action or calibration authority bypass",
+    "full existing core and app suites pass on Python 3.10 and 3.12"
+  ],
+  "input_sha256": {
+    "clean.seed17": "33476020c4281167d5548a9d209991dd0fc8a8969c85c0fe276541da23a8e7af",
+    "clean.seed29": "03332dbb20f6acb67fe32c4e630652079041b76d0b7799228b642f941f826e41",
+    "clean.seed41": "2a05931d1217e193b17d01da08a87a5768307e23b2dd71785939b0d35bb16d60",
+    "equal_duplicate": "1ee022f430ea3a0a3f60c1285aee19ad1f042a579da51b1233edb31374bcc6b1",
+    "future_conflict": "240593317092a779790fe7a1ebdd25421ca939942ea3c552cff82e351b93900e",
+    "known_before_conflict": "d99c15e487c95eb2f2eae4c5169c3f841c81b0bee698c271bafa2699d0eed67e",
+    "late_before_conflict": "802270b11801960decdfec5b2ec82cbf33f681714c505c8b7da0ebf467bd6f61",
+    "late_outcome_conflict": "aecaaf67f8344f6b2ae953ae89180de02929ee273fda7b8b569f3116b4b9346a",
+    "older_before_reference": "63e5aa631e9ee4968957d17bed6fd56319449f47914b7081156b3e4dca1a114f",
+    "superseded_outcome": "c8ca378846020a5b4fa3f63e144b1a52eb531a6f34124ba039f103d06949c974",
+    "unrelated_conflict": "842b962a50eb347401f80098fa6bdc8530e016146a94c1cc585639a653e6ffc9"
+  },
+  "not_claimed": [
+    "personal benefit",
+    "better prediction accuracy",
+    "causal effect",
+    "calibrated coverage",
+    "SOTA"
+  ],
+  "past_as_of": "2026-10-25T00:00:00Z",
+  "schema": 1,
+  "seeds": [
+    17,
+    29,
+    41
+  ],
+  "source_sha256": {
+    "qone_core/life/__init__.py": "1775835811cebd11dc373559a4af990736a0dde33869c5b4fa068b773de19c81",
+    "qone_core/life/adaptive.py": "98dc14f9c4fc6e02b1a4c14288e36bae931ba42ba4b5a15c4d9c108a086c2e86",
+    "qone_core/life/calibration.py": "dd7aca1d2b0b970e50e7cd4927bed04927ae66dff1add0ba532eb9e894f57528",
+    "qone_core/life/model.py": "b3394469aac0a1d3b352b28bc42fe1f67ae8f23869a0d72e9094f8ea3e172535",
+    "qone_core/life/scenario.py": "3fa13c149f8f54de327943e62366993f6ed106c4e8552f22218fe9449678499b",
+    "qone_core/life/state.py": "b888720995828111afbd699ad7ce8d4154f0163e40be2202425aaffe1d196588"
+  },
+  "synthetic_only": true,
+  "training_count": 40
+}

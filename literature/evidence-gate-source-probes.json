@@ -1,0 +1,91 @@
+{
+  "checked_at": "2026-10-26",
+  "search": {
+    "engine": "web.run",
+    "queries": [
+      "site.tensorflow.org tfx data_validation anomalies schema conflicting features",
+      "site.opentelemetry.io docs logs data model Timestamp ObservedTimestamp"
+    ],
+    "total_hits": "not reported"
+  },
+  "sources": [
+    {
+      "repository": "tensorflow/data-validation",
+      "head": "aaa0ae1902262cac7b306358588d61e8521f3b25",
+      "default_branch": "master",
+      "license": "Apache-2.0",
+      "release": {
+        "tag": "v1.21.0",
+        "published_at": "2026-06-11T16:39:40Z",
+        "url": "https://github.com/tensorflow/data-validation/releases/tag/v1.21.0"
+      },
+      "scope": "Schema and per-example anomaly checks; stats-based implementation inspected only, not run. No Q-One ambiguity resolver exists here.",
+      "files": [
+        {
+          "url": "https://github.com/tensorflow/data-validation/blob/aaa0ae1902262cac7b306358588d61e8521f3b25/tensorflow_data_validation/api/validation_api.py",
+          "blob_sha": "030ec2220de581efae63acf0a5a1f1eb5308642c",
+          "key": "tfdv_api"
+        },
+        {
+          "url": "https://github.com/tensorflow/data-validation/blob/aaa0ae1902262cac7b306358588d61e8521f3b25/tensorflow_data_validation/api/validation_api.py",
+          "blob_sha": "030ec2220de581efae63acf0a5a1f1eb5308642c",
+          "key": "tfdv_validate"
+        },
+        {
+          "url": "https://github.com/tensorflow/data-validation/blob/aaa0ae1902262cac7b306358588d61e8521f3b25/LICENSE",
+          "blob_sha": "a196a6a777264c8c033fe2fd8489614ac9ef0ad6",
+          "key": "tfdv_license"
+        }
+      ]
+    },
+    {
+      "repository": "open-telemetry/opentelemetry-specification",
+      "head": "5740e9af3c82a3c89ef0b2357548946fbf5a9f5e",
+      "default_branch": "main",
+      "license": "Apache-2.0",
+      "release": {
+        "tag": "v1.62.0",
+        "published_at": "2026-10-22T23:32:52Z",
+        "url": "https://github.com/open-telemetry/opentelemetry-specification/releases/tag/v1.62.0"
+      },
+      "scope": "Log event and collection times; specification inspected, not a predictive model.",
+      "files": [
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-specification/blob/5740e9af3c82a3c89ef0b2357548946fbf5a9f5e/specification/logs/data-model.md",
+          "blob_sha": "1e58b7f18fb547f45132b185f241f3b097f76bb0",
+          "key": "otel_data_model"
+        },
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-specification/blob/5740e9af3c82a3c89ef0b2357548946fbf5a9f5e/specification/logs/data-model.md",
+          "blob_sha": "1e58b7f18fb547f45132b185f241f3b097f76bb0",
+          "key": "otel_timestamps"
+        },
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-specification/blob/5740e9af3c82a3c89ef0b2357548946fbf5a9f5e/LICENSE",
+          "blob_sha": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+          "key": "otel_license"
+        }
+      ]
+    }
+  ],
+  "paper": {
+    "title": "Data Validation for Machine Learning",
+    "authors": [
+      "Eric Breck",
+      "Neoklis Polyzotis",
+      "Sudip Roy",
+      "Steven Euijong Whang",
+      "Martin Zinkevich"
+    ],
+    "venue": "SysML 2019",
+    "url": "https://mlsys.org/Conferences/2019/doc/2019/167.pdf",
+    "inspected": "Title, abstract, introduction and system overview, pages 1-3. Production pipeline observations, not personal outcomes.",
+    "reproduced": false
+  },
+  "decision": "Implement local evidence qualification from Q-One's own immutable observations and time contract. No third-party code copied, package installed or remote training run.",
+  "limits": [
+    "No source establishes personal benefit or a SOTA ranking.",
+    "TFDV detects aggregate/schema anomalies; contradictory personal reports require domain semantics.",
+    "OpenTelemetry timestamps do not specify Q-One correction or episode eligibility policies."
+  ]
+}
