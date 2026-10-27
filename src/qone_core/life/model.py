@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from datetime import datetime, timezone
+from decimal import Decimal
 from hashlib import sha256
 import json
 import math
@@ -106,6 +107,27 @@ def measured_value(value, measure):
     if measure['scale'] in {'ordinal', 'nominal'} and value not in measure['categories']:
         raise ModelError('观察类别不在预定义类别内')
     return value
+
+
+def canonical_measured_value(value, measure):
+    """Normalize numeric representation for equality, not for arithmetic."""
+    result = measured_value(value, measure)
+    if isinstance(result, dict):
+        return {key: _canonical_number(result[key]) for key in ('lower', 'upper')}
+    if type(result) in (int, float):
+        return _canonical_number(result)
+    return result
+
+
+def _canonical_number(value):
+    normalized = Decimal(str(value)).normalize()
+    if normalized == 0:
+        return '0'
+    return format(normalized, 'f')
+
+
+def measured_fingerprint(value, measure):
+    return fingerprint(canonical_measured_value(value, measure))
 
 
 def condition(row, measures):

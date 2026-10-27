@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.1 — 2026-10-26
+
+- Added atomic training-evidence qualification for same-time conflicts, explicit corrections, and non-current before references.
+- Kept excluded episodes, issue codes, and available/trainable/excluded denominators in forecasts and replay.
+- Added frozen bitemporal counterexamples plus regression tests for future evidence, low support, calibration isolation, and numeric equality.
+- Kept Bayesian prediction, calibration authority, resource constraints, and human-review gates unchanged.
+
 ## 0.2.0 — 2026-10-24
 
 - Added transactional DecisionService and finite-number/timezone/schema validation.

@@ -62,6 +62,11 @@ def evaluate(phase):
                 assert row['past_unchanged'],name
         results.append(row)
     report={'phase':phase,'protocol_sha256':sha256(protocol_data).hexdigest(),'runtime':{'python':platform.python_version(),'numpy':numpy.__version__,'scipy':scipy.__version__},'cases':results,'synthetic_only':True,'personal_benefit_measured':False}
+    if phase == 'candidate':
+        report['source_sha256'] = {
+            str(path.relative_to(ROOT / 'src')): sha256(path.read_bytes()).hexdigest()
+            for path in sorted((ROOT / 'src/qone_core/life').glob('*.py'))
+        }
     write(ARTIFACT/(phase+'.json'),report)
     print(json.dumps({'phase':phase,'cases':len(results),'selection_matching_cases':sum(r['selection_matches'] for r in results),'protocol_sha256':report['protocol_sha256']}))
 

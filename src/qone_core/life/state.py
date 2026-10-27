@@ -1,6 +1,7 @@
 """As-of state and three-valued goal evaluation; no global life score."""
 from datetime import timedelta
-from .model import COLLECTIONS, ModelError, fingerprint, instant, interval, measured_value, number, validate_model
+from .model import (COLLECTIONS, ModelError, fingerprint, instant, interval, measured_fingerprint,
+                    measured_value, number, validate_model)
 
 
 def resource_key(resource):
@@ -80,7 +81,7 @@ class LifeKernel:
             o = max(latest, key=lambda o: (instant(o['recorded_at']), o['id']))
             value = measured_value(o['value'], m)
             status = 'known'
-            if len({fingerprint(measured_value(x['value'], m)) for x in latest}) > 1:
+            if len({measured_fingerprint(x['value'], m) for x in latest}) > 1:
                 status = 'conflict'
             elif at - latest_time > timedelta(days=m['freshness_days']):
                 status = 'stale'

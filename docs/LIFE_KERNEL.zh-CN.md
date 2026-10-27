@@ -128,3 +128,7 @@ python -m pytest -q
 ## 0.4补充：校准候选保持影子模式
 
 `learning.calibration`可配置 `method=prequential_aci`、`step_size`、`window`、`min_samples`，用于历史对照。`forecast()`的权威上下界仍是原Student-t范围，候选写在 `candidate_interval`；`calibration.deployment=shadow_only`。这项隔离是因稳定场景改善而突变场景失败的实测结果，不是已经通过部署验证的校准策略。见 [本轮完整对照](CALIBRATION_EVALUATION.zh-CN.md)。
+
+## 0.4.1补充：证据冲突不进入训练或回放
+
+当同一测量在同一观测时点有未解决的不同报告，或者 episode 的事前引用不是行动开始时当前可用的观察时，该 episode 不参与训练、校准或最终回放。系统保留 `available_n/trainable_n/excluded_n` 和逐条排除原因，不用平均值、模型猜测或后来的结果修复冲突；未来才登记的冲突也不会改变过去 cutoff 的预测。完整规则、冻结反例和复现方式见 [证据资格门](EVIDENCE_GATE.zh-CN.md)。

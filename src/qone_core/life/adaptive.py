@@ -9,7 +9,7 @@ from datetime import timedelta
 from itertools import combinations
 import math
 
-from .model import ModelError, fingerprint, instant, number
+from .model import ModelError, fingerprint, instant, measured_fingerprint, measured_value, number
 from .scenario import ScenarioKernel
 from .state import check_condition, goal_states
 from .calibration import DelayedACI, calibration_config
@@ -163,6 +163,74 @@ class AdaptiveKernel(ScenarioKernel):
             except (KeyError,TypeError) as exc:
                 raise ModelError('学习记录字段不完整') from exc
 
+        # Parse immutable observations once. Qualification must retain both clocks;
+        # delayed contradictory evidence must not rewrite past issued predictions.
+        self._evidence_rows = [
+            (o, instant(o['observed_at']), instant(o['recorded_at']),
+             measured_fingerprint(o['value'], self.index['measures'][o['measure_id']]))
+            for o in self.model['observations']]
+        self._before_checks = {}
+
+    def _before_issues(self, episode):
+        """A reference must describe the state actually available at action start."""
+        key = episode['id']
+        if key not in self._before_checks:
+            states = self.snapshot(episode['started_at'])['measures']
+            issues = []
+            for mid in dict.fromkeys(d['measure_id'] for d in self.features+self.targets):
+                row = states[mid]
+                oid = episode['before'][mid]
+                if row['status'] != 'known':
+                    issues.append({'code':'before_state_'+row['status'], 'field':'before',
+                                   'measure_id':mid, 'observation_id':oid})
+                elif oid not in row['observation_ids']:
+                    issues.append({'code':'before_reference_not_current', 'field':'before',
+                                   'measure_id':mid, 'observation_id':oid})
+            self._before_checks[key] = issues
+        return self._before_checks[key]
+
+    def _training_evidence(self, cutoff):
+        """Atomic episode eligibility, with exclusions retained in the denominator.
+
+        Later observations at different event times do not replace historical
+        features. Same-event contradictions and explicit corrections do invalidate
+        referenced evidence, from their knowledge time onward. No value is chosen
+        or averaged to repair a disagreement automatically.
+        """
+        visible = [(o, at, value) for o, at, recorded, value in self._evidence_rows
+                   if recorded <= cutoff]
+        superseded = {o['supersedes'] for o, _, _ in visible if o.get('supersedes')}
+        groups = {}
+        for o, at, value in visible:
+            if o['id'] not in superseded:
+                groups.setdefault((o['measure_id'], at), []).append((o['id'], value))
+        conflicts = {}
+        for rows in groups.values():
+            if len({value for _, value in rows}) > 1:
+                ids = sorted(oid for oid, _ in rows)
+                for oid, _ in rows:
+                    conflicts[oid] = ids
+        episodes, excluded = [], []
+        for episode in sorted(self.episodes, key=lambda e:(instant(e['recorded_at']), e['id'])):
+            if instant(episode['recorded_at']) > cutoff:
+                continue
+            issues = list(self._before_issues(episode))
+            for field, definitions in [('before', self.features+self.targets), ('after', self.targets)]:
+                for mid in dict.fromkeys(d['measure_id'] for d in definitions):
+                    oid = episode[field][mid]
+                    issue = {'field':field, 'measure_id':mid, 'observation_id':oid}
+                    if oid in superseded:
+                        issues.append(issue | {'code':'observation_superseded'})
+                    elif oid in conflicts:
+                        issues.append(issue | {'code':'observation_conflict', 'conflicting_ids':conflicts[oid]})
+            if issues:
+                excluded.append({'episode_id':episode['id'], 'issues':issues})
+            else:
+                episodes.append(episode)
+        return {'episodes':episodes, 'excluded_episodes':excluded,
+                'evidence_summary':{'available_n':len(episodes)+len(excluded),
+                                    'trainable_n':len(episodes), 'excluded_n':len(excluded)}}
+
     @staticmethod
     def _point(value):
         if isinstance(value,dict):
@@ -187,14 +255,8 @@ class AdaptiveKernel(ScenarioKernel):
         key=cutoff.isoformat()
         if key in self._cache:
             return self._cache[key]
-        # A correction invalidates episodes that still reference the old value.
-        superseded={o['supersedes'] for o in self.model['observations'] if o.get('supersedes') and instant(o['recorded_at'])<=cutoff}
-        episodes=[]
-        for e in self.episodes:
-            refs=set(e['before'].values())|set(e['after'].values())
-            if instant(e['recorded_at'])<=cutoff and not refs & superseded:
-                episodes.append(e)
-        episodes.sort(key=lambda e:(instant(e['recorded_at']),e['id']))
+        evidence=self._training_evidence(cutoff)
+        episodes=evidence['episodes']
         models={d['measure_id']:BayesianTransition(len(self.feature_names), **{k:self.config[k] for k in ('precision','alpha','beta') if k in self.config}) for d in self.targets}
         portfolios, contexts={},[]
         for e in episodes:
@@ -205,7 +267,7 @@ class AdaptiveKernel(ScenarioKernel):
                 before=self._point(self.index['observations'][e['before'][d['measure_id']]]['value'])
                 after=self._point(self.index['observations'][e['after'][d['measure_id']]]['value'])
                 models[d['measure_id']].update(x,(after-before)/d['scale'])
-        result={'models':models,'episodes':episodes,'portfolios':portfolios,'contexts':contexts}
+        result=evidence | {'models':models,'portfolios':portfolios,'contexts':contexts}
         if len(self._cache)>=16: self._cache.clear()
         self._cache[key]=result
         return result
@@ -309,6 +371,8 @@ class AdaptiveKernel(ScenarioKernel):
                 predictions[d['measure_id']]=p
         return {'status':'supported_prediction' if not issues else 'abstain','issues':issues,'predictions':predictions,
                 'training_episode_ids':[e['id'] for e in fit['episodes']], 'training_n':n,'portfolio_support':support,
+                'training_evidence':{'summary':deepcopy(fit['evidence_summary']),
+                                     'excluded_episodes':deepcopy(fit['excluded_episodes'])},
                 'model_sha256':self.model_sha256,'feature_names':self.feature_names,
                 'causality_established':False,'joint_coverage_guarantee':False,
                 'interpretation':'给定回归与先验假设的边际后验预测；非因果效应，非共形覆盖保证'}
@@ -351,13 +415,18 @@ class AdaptiveKernel(ScenarioKernel):
         row['interpretation']='固定时域的学习预测；连续过程未建模，不自动推断因果关系或多维联合覆盖'
         return row
 
-    def replay(self):
-        """Prequential reconstruction; prediction intervals never use later labels."""
+    def replay(self, *, as_of=None):
+        """Prequential predictions scored only against qualified labels as of cutoff."""
         rows=[]
-        horizon=max((e['recorded_at'] for e in self.episodes),key=instant,default=None)
+        horizon=as_of or max((r['recorded_at'] for r in self.episodes+self.model['observations']),key=instant,default=None)
+        evidence=self.fitted(horizon) if horizon else {'episodes':[], 'excluded_episodes':[],
+                    'evidence_summary':{'available_n':0,'trainable_n':0,'excluded_n':0}}
+        valid={e['id'] for e in evidence['episodes']}
         history=self.calibration_history(horizon) if horizon else None
         alpha=1-self.config.get('predictive_mass',0.9)
         for raw in self._raw_replay():
+            if raw['episode_id'] not in valid:
+                continue
             row=dict(raw); lower,upper=row['lower'],row['upper']
             if history is not None:
                 receipt=history['issued'].get(fingerprint({'episode_id':row['episode_id'],'measure_id':row['measure_id']}))
@@ -382,6 +451,9 @@ class AdaptiveKernel(ScenarioKernel):
             for out,field,pool in [('mae','absolute_error',rs),('no_change_mae','no_change_absolute_error',rs),('mean_nlpd','negative_log_predictive_density',rs),('observed_coverage','interval_contains_observation',finite),('mean_width','predictive_width',finite),('mean_interval_score','interval_score',finite)]:
                 if pool: summary[d['measure_id']][out]=sum(r[field] for r in pool)/len(pool)
         return {'rows':rows,'summary':summary,'protocol':'predict_at_episode_start_using_only_recorded_outcomes',
+                'as_of':instant(horizon).isoformat() if horizon else None,
+                'evidence_summary':deepcopy(evidence['evidence_summary']),
+                'excluded_episodes':deepcopy(evidence['excluded_episodes']),
                 'interval_method':'prequential_aci_shadow' if history is not None else 'student_t',
                 'used_for_recommendations':False if history is not None else None,'density_basis':'base_student_t',
                 'model_sha256':self.model_sha256,'policy_value_estimated':False,'causal_effect_estimated':False,

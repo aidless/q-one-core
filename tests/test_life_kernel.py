@@ -47,6 +47,14 @@ def test_bitemporal_correction_conflict_and_staleness(model):
     assert LifeKernel(model).snapshot(AT)['measures']['practice']['status']=='conflict'
 
 
+def test_equivalent_numeric_json_representations_are_not_a_conflict(model):
+    obs=next(o for o in model['observations'] if o['id']=='current-practice')
+    model['observations'].append(obs|{'id':'float-duplicate','value':float(obs['value'])})
+    state=LifeKernel(model).snapshot(AT)['measures']['practice']
+    assert state['status']=='known'
+    assert state['observation_ids']==['current-practice','float-duplicate'] or set(state['observation_ids'])=={'current-practice','float-duplicate'}
+
+
 def test_reject_cycles_units_future_facts_and_malformed(model):
     for mutate in [lambda m:m['dimensions'][0].update(parent_id='physical'),
                    lambda m:m['actions'][0]['costs'][0].update(unit='小时'),

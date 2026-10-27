@@ -87,3 +87,9 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md), keep protocol changes versioned, preser
 新增保留行动/上下文结构、按日历时间推演短期偏移的独立原型，支持晚到结果的历史重建；并提供能核算预测分母、逐条评分与采用决定的工件审计工具。候选未通过全部稳定/变化反例，继续保持研究用途。
 
 [冻结评测与限制](docs/TWO_SCALE_EVALUATION.zh-CN.md) · [输入、源码与逐条证据](artifacts/two-scale-evaluation/v1/) · [官方来源核查](literature/two-scale-source-probes.json)
+
+## 证据资格门 0.4.1
+
+训练和回放现在会排除同一点位的未解决冲突、被显式更正的旧观察，以及行动开始时不是当前状态的事前引用；排除原因和 `available_n/trainable_n/excluded_n` 一并保留。未来登记的冲突不会改写过去已发出的预测，低样本时继续拒绝推荐。
+
+[规则、冻结反例与限制](docs/EVIDENCE_GATE.zh-CN.md) · [协议、基线与候选](artifacts/evidence-gate/v1/) · [来源核验](literature/evidence-gate-source-probes.json)
