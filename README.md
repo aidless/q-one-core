@@ -49,6 +49,25 @@ The generated decision ID is printed by `create`; use it in subsequent commands.
 
 See [docs/PROTOCOL.md](docs/PROTOCOL.md) for the event contract and [docs/RESEARCH_PLAN.md](docs/RESEARCH_PLAN.md) for the first measurement plan.
 
+## 复算（可复现）
+
+```bash
+# 1) 单元测试：需要包可导入（qone_core）
+python3 -m venv /tmp/qone-venv            # 注意：工作区路径含 ":"（如 F:\deepseek），venv 须建在无冒号路径
+/tmp/qone-venv/bin/pip install -e . pytest numpy scipy
+/tmp/qone-venv/bin/python -m pytest tests/ -q     # 期望：79 passed (+4 subtests)
+
+# 2) 各评测/复现脚本（合成回放与工件审计）
+python3 scripts/evaluate_life_kernel.py           # 0.3 人生决策内核
+python3 scripts/evaluate_calibration.py           # 0.4 校准影子评测
+python3 scripts/evaluate_recency.py               # 非平稳预测研究
+python3 scripts/evaluate_two_scale.py             # 双时间尺度研究
+python3 scripts/evaluate_evidence_gate.py         # 0.4.1 证据资格门
+python3 scripts/verify_predictive_artifact.py     # 工件审计（核算预测分母/逐条评分）
+```
+
+> 若重算结果与 README 各节不符，先 `git diff` 检查 `src/` 与 `artifacts/` 是否被改动，不要直接改结论数字。所有评测采用**合成回放**（`artifacts/` 内逐条证据 JSON），不代表真实人生收益——见下方「证据资格门 0.4.1」与各评测限制。
+
 ## Evidence boundary
 
 The ledger is an audit and measurement mechanism. It is not a clinical instrument, a financial adviser, a psychological diagnosis, or proof that life outcomes can be reduced to one scalar. Any personal calibration result must be treated as descriptive until there is enough frozen data, a defined protocol, and an independent review.
