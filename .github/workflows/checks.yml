@@ -13,5 +13,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - run: python -m pip install ".[adaptive]" pytest
-      - run: python -m pytest -q
+      - name: Offline CLI smoke and verify
+        run: python scripts/offline_smoke.py
+      - name: Version and documentation drift
+        run: python scripts/check_drift.py
+      - name: Install tests and optional adaptive extras
+        run: python -m pip install ".[adaptive,dev]"
+      - name: Pytest
+        run: python -m pytest -q
+      - name: Installed console script verify
+        run: |
+          data=$(mktemp -d)
+          qone --data-dir "$data" init
+          qone --data-dir "$data" verify

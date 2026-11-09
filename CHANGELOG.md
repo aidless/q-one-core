@@ -14,6 +14,10 @@
 
 ## Unreleased
 
+- Documented the writer boundary, hash-chain limits, and baseline-gaming limits in FAILURE_MODES.md. No protocol or schema change, and no external validation study.
+- Added an offline CLI smoke (`scripts/offline_smoke.py`) and a version/docs drift check (`scripts/check_drift.py`) to CI.
+- Removed machine-local absolute paths from evaluation provenance notes. Archived numeric outputs were not edited.
+
 - Fixed forecast scoring to exclude recommendations whose option was not selected.
 - Added traceable eligible rows, exclusion reasons, and explicit adoption denominators.
 - Added seven regression tests including a synthetic CLI flow and an override case that fails on the original implementation.

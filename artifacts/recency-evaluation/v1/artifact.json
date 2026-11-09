@@ -8,7 +8,7 @@
   "synthetic": true,
   "benchmark_eligible": false,
   "default_changed": false,
-  "command": "python artifacts/recency-evaluation/v1/source/scripts/evaluate_recency.py --output-dir /tmp/qone-recency-new-replay",
+  "command": "python artifacts/recency-evaluation/v1/source/scripts/evaluate_recency.py --output-dir <new-empty-dir>",
   "files": {
     "acceptance.json": {
       "sha256": "ea119090e51f1b0d92c51f5901c8c321b297e6ab70d54c7aea9f3f50e761d204",
@@ -107,8 +107,8 @@
       "bytes": 4986
     },
     "provenance.md": {
-      "sha256": "612cc7ed77d2b2e15af4663b88ed903f427c81d72bfd8bc0e582b9609f0ee75a",
-      "bytes": 3591
+      "sha256": "4cebacef40a57ae93db24cf090fda3df0e4bfb5474287d6a4bdecc1af42335b2",
+      "bytes": 3954
     },
     "results.json": {
       "sha256": "f032799f0385231c1efaee5755b8ab0793ca355991cb474b6d57933fce0d579b",

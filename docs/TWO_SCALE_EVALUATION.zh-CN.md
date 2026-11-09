@@ -58,7 +58,7 @@
 在仓库根目录复现，不覆盖v1：
 
 ```bash
-python artifacts/two-scale-evaluation/v1/source/scripts/evaluate_two_scale.py --output-dir /tmp/qone-two-scale-new-replay
+python artifacts/two-scale-evaluation/v1/source/scripts/evaluate_two_scale.py --output-dir <new-empty-dir>
 python scripts/verify_predictive_artifact.py artifacts/two-scale-evaluation/v1
 ```
 

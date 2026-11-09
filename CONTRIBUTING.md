@@ -13,6 +13,10 @@ Contributions should preserve the auditability and human boundary of the protoco
 
 A pull request should include a short protocol impact note, an example payload when fields change, and the checks used to inspect the change. Do not report synthetic fixtures as real-world performance.
 
+## Honesty
+
+Do not add user counts, download counts, star counts, or an external validation study unless the study is in the repository. Keep machine-local absolute paths out of docs and provenance notes. `python3 scripts/check_drift.py` fails when `pyproject.toml`, `qone_core.__version__`, the README package line, and the documented CLI disagree.
+
 ## Data and privacy
 
 Use anonymized or synthetic examples in issues and documentation. The local `.qone-data/` directory is ignored by default; verify that private exports are not staged before opening a pull request.

@@ -2,6 +2,8 @@
 
 > Positioning (one sentence): **every LLM development path is a proposal generator; Q-One is the decision verifier; improvement is gated, not assumed.**
 >
+> Runnable boundary in this repository: `DecisionService` checks transitions inside the ledger lock; `Ledger.append` does not, and the CLI calls `Ledger.append`. See [FAILURE_MODES.md](../FAILURE_MODES.md). The milestones below are targets, not results collected here.
+>
 > Design decisions are grounded in a four-pillar research synthesis (forecasting/calibration science, RLVR & self-improvement, agent memory, measurement theory): see [SYNTHESIS.md](SYNTHESIS.md) — including the three boundary conditions that keep "quantify everything" honest, and the protocol red line that LLM judgments enter as *advice evidence*, never as automatic optimization targets.
 
 The field splits into a *proposal side* (bigger models, CoT, test-time compute, multi-agent) and a *verification side* (RLVR, process rewards, eval-gated self-improvement, calibration). The center of gravity is moving to the verification side, because proposal-side output is not directly trustworthy. Q-One is built entirely on the verification side — and its ambition is to run that verification loop on everyday decisions, not just benchmarks.
