@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/aidless/q-one-core/actions/workflows/checks.yml/badge.svg)](https://github.com/aidless/q-one-core/actions/workflows/checks.yml)
 
+> **English TL;DR**: Q-One Core is the first repository of a three-part system for quantifying decisions: it records explicit variables, the pre-recommendation baseline, and the human decision in an append-only, hash-chained JSONL ledger, then compares agent predictions with observed outcomes. Run via a local CLI (`qone init` through `qone report`). It deliberately stays a small local protocol — recommendations always require a recorded baseline and a human final choice, and it does not automate consequential decisions.
+
 > 中文研究入口：[多学科融合蓝图](docs/SYNTHESIS_BLUEPRINT.zh-CN.md)。v0.2 已接入完整个人应用；[使用入口与验收](https://github.com/aidless/q-one-life)。
 
 Q-One Core is the first repository in a three-part open-source system for **“万事万物皆可量化”**: turn a decision into explicit variables, record what was known before an agent recommendation, preserve the human decision, and later compare the prediction with the observed outcome.
