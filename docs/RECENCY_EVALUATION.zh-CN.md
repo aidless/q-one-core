@@ -55,7 +55,7 @@
 在仓库根目录，安装NumPy/SciPy后使用已冻结源码：
 
 ```bash
-python artifacts/recency-evaluation/v1/source/scripts/evaluate_recency.py --output-dir /tmp/qone-recency-new-replay
+python artifacts/recency-evaluation/v1/source/scripts/evaluate_recency.py --output-dir <new-empty-dir>
 ```
 
 输出目录必须不存在或为空；源码哈希与协议必须相符。匹配本轮数值环境使用Python3.12.3、NumPy2.5.2、SciPy1.18.1。改参数或实现应建立v2，不覆盖v1。
