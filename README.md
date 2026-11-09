@@ -1,5 +1,7 @@
 # Q-One Core
 
+[![CI](https://github.com/aidless/q-one-core/actions/workflows/checks.yml/badge.svg)](https://github.com/aidless/q-one-core/actions/workflows/checks.yml)
+
 > 中文研究入口：[多学科融合蓝图](docs/SYNTHESIS_BLUEPRINT.zh-CN.md)。v0.2 已接入完整个人应用；[使用入口与验收](https://github.com/aidless/q-one-life)。
 
 Q-One Core is the first repository in a three-part open-source system for **“万事万物皆可量化”**: turn a decision into explicit variables, record what was known before an agent recommendation, preserve the human decision, and later compare the prediction with the observed outcome.
