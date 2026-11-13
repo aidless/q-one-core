@@ -1,6 +1,12 @@
 # Q-One Core
 
-> 中文研究入口：[多学科融合蓝图](docs/SYNTHESIS_BLUEPRINT.zh-CN.md)。v0.2 已接入完整个人应用；[使用入口与验收](https://github.com/aidless/q-one-life)。
+[![CI](https://github.com/aidless/q-one-core/actions/workflows/checks.yml/badge.svg)](https://github.com/aidless/q-one-core/actions/workflows/checks.yml)
+
+**中文文档：[README.zh-CN.md](README.zh-CN.md)**（完整中文版）
+
+> **English TL;DR**: Q-One Core is the first repository of a three-part system for quantifying decisions: it records explicit variables, the pre-recommendation baseline, and the human decision in an append-only, hash-chained JSONL ledger, then compares agent predictions with observed outcomes. Run via a local CLI (`qone init` through `qone report`). It deliberately stays a small local protocol — recommendations always require a recorded baseline and a human final choice, and it does not automate consequential decisions.
+
+> Research entry points: [multi-discipline synthesis blueprint](docs/SYNTHESIS.md) · v0.2 connects to the full personal application; [usage entry and acceptance](https://github.com/aidless/q-one-life).
 
 Q-One Core is the first repository in a three-part open-source system for **“万事万物皆可量化”**: turn a decision into explicit variables, record what was known before an agent recommendation, preserve the human decision, and later compare the prediction with the observed outcome.
 
@@ -38,6 +44,36 @@ qone --data-dir .qone-data report
 ```
 
 The generated decision ID is printed by `create`; use it in subsequent commands. The example deadline is illustrative and should be edited for the date on which you run it.
+
+### Verified on 2026-11-10 (fresh venv, `pip install -e .`)
+
+```text
+$ qone --data-dir .qone-demo init
+initialized .qone-demo/ledger.jsonl (0 events)
+$ qone --data-dir .qone-demo create --file examples/decision.json
+D-20261110-6a4e5d
+$ qone ... baseline / recommend / decide / resolve    (each prints one confirmation line)
+$ qone --data-dir .qone-demo verify
+verified 5 events
+$ qone --data-dir .qone-demo report
+ledger events: 5
+decisions: 1 (1 resolved) / baselines: 1 / recommendations: 1 / human decisions: 1
+recommendation adoption: 1.0
+evidence status: descriptive_with_outcomes
+calibration n: 1  calibration excluded: 0
+brier score: 0.09
+observed success rate: 1.0
+```
+
+## Results
+
+| Check | Number | Command (2026-11-10) |
+|---|---|---|
+| CI test suite | **79 passed + 4 subtests** (13.1 s) | `pip install ".[adaptive]" pytest && python -m pytest -q` |
+| Quickstart end-to-end | 5-event ledger verifies clean; report emits `descriptive_with_outcomes`, Brier 0.09 on the single resolved toy outcome | the `qone` sequence above |
+
+The Brier 0.09 comes from one toy decision resolved as success against a 0.70
+success probability — it demonstrates the scoring path, not calibration skill.
 
 ## Protocol properties
 
@@ -78,37 +114,59 @@ Do not commit personal decision logs, API keys, model outputs containing private
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md), keep protocol changes versioned, preserve failed or unknown outcomes, and describe evidence limits in pull requests. This project is released under the MIT License.
 
-## 人生决策内核 0.3
+## Life-decision kernel 0.3
 
-新增有测量语义的个人状态、目标树、价值顺序、资源账户、延迟情景、多目标比较，以及从行动前后观察学习的贝叶斯变化预测。当前验证为合成回放，不代表真实人生收益。
+Adds personal state with measurement semantics, a goal tree, value ordering,
+resource accounts, delayed scenarios, multi-objective comparison, and a
+Bayesian change predictor that learns from pre-/post-action observations.
+Currently validated on **synthetic replay only** — it does not represent
+real-life benefit.
 
-- [内核详细文档](docs/LIFE_KERNEL.zh-CN.md)
-- [技术进阶蓝图与接入条件](docs/ADVANCED_ROADMAP.zh-CN.md)
-- [合成回放逐条证据](docs/evidence/adaptive-synthetic.json)
-- [可运行的模型示例](examples/adaptive.synthetic.json)
+- [Kernel documentation](docs/LIFE_KERNEL.zh-CN.md)
+- [Advanced technical blueprint and integration conditions](docs/ADVANCED_ROADMAP.zh-CN.md)
+- [Per-item synthetic-replay evidence](docs/evidence/adaptive-synthetic.json)
+- [Runnable model example](examples/adaptive.synthetic.json)
 
-安装预测组件：`pip install '.[adaptive]'`；复现：`python scripts/evaluate_life_kernel.py`。
+Install the predictive components with `pip install '.[adaptive]'`;
+reproduce with `python scripts/evaluate_life_kernel.py`.
 
-## 在线校准影子评测 0.4
+## Online-calibration shadow evaluation 0.4
 
-新增延迟结果校准凭据、按行动组合分组的校准候选和冻结的稳定/突变对照。候选未通过全部采用条件，保持影子评测；自动推荐使用的区间不改变。
+Adds delayed-outcome calibration credentials, calibration candidates grouped
+by action composition, and frozen stable/abrupt controls. The candidate
+**failed every adoption condition and stays in shadow evaluation**; the
+intervals used for automatic recommendations are unchanged.
 
-[实验与采用决定](docs/CALIBRATION_EVALUATION.zh-CN.md) · [固定协议与逐条证据](artifacts/calibration-evaluation/v1/) · [官方来源核验](literature/calibration-source-probes.json)
+[Experiment and adoption decision](docs/CALIBRATION_EVALUATION.zh-CN.md) · [frozen protocol and per-item evidence](artifacts/calibration-evaluation/v1/) · [official-source probes](literature/calibration-source-probes.json)
 
-## 非平稳预测研究：日历遗忘候选
+## Non-stationary forecasting research: calendar-recency candidate
 
-加入按结果发生时间遗忘的独立原型，以及均值/噪声变化、不规则观察和结果延迟的冻结对照。候选未通过稳定与稀疏场景的采用条件，保留完整失败结果，自动推荐内核保持原版本。
+Adds an independent prototype that forgets by outcome time, plus frozen
+controls for mean/noise shifts, irregular observations, and delayed outcomes.
+The candidate **failed the adoption conditions on both the stable and the
+sparse scenarios**; the full failure results are retained and the
+auto-recommendation kernel stays on the previous version.
 
-[评测结果、限制与复现](docs/RECENCY_EVALUATION.zh-CN.md) · [协议与逐条证据](artifacts/recency-evaluation/v1/) · [官方来源核验](literature/recency-source-probes.json)
+[Evaluation results, limits, reproduction](docs/RECENCY_EVALUATION.zh-CN.md) · [protocol and per-item evidence](artifacts/recency-evaluation/v1/) · [official-source probes](literature/recency-source-probes.json)
 
-## 双时间尺度研究：长期结构与短期变化
+## Two-timescale research: long-run structure vs short-term drift
 
-新增保留行动/上下文结构、按日历时间推演短期偏移的独立原型，支持晚到结果的历史重建；并提供能核算预测分母、逐条评分与采用决定的工件审计工具。候选未通过全部稳定/变化反例，继续保持研究用途。
+Adds an independent prototype that preserves action/context structure and
+projects short-term drift along calendar time, with historical reconstruction
+of late-arriving outcomes; plus an artifact-audit tool that accounts the
+prediction denominator, per-item scoring, and adoption decisions. The
+candidate **failed all stable/change counterexamples and remains
+research-only**.
 
-[冻结评测与限制](docs/TWO_SCALE_EVALUATION.zh-CN.md) · [输入、源码与逐条证据](artifacts/two-scale-evaluation/v1/) · [官方来源核查](literature/two-scale-source-probes.json)
+[Frozen evaluation and limits](docs/TWO_SCALE_EVALUATION.zh-CN.md) · [inputs, sources and per-item evidence](artifacts/two-scale-evaluation/v1/) · [official-source probes](literature/two-scale-source-probes.json)
 
-## 证据资格门 0.4.1
+## Evidence eligibility gate 0.4.1
 
-训练和回放现在会排除同一点位的未解决冲突、被显式更正的旧观察，以及行动开始时不是当前状态的事前引用；排除原因和 `available_n/trainable_n/excluded_n` 一并保留。未来登记的冲突不会改写过去已发出的预测，低样本时继续拒绝推荐。
+Training and replay now exclude unresolved conflicts at the same data point,
+explicitly superseded older observations, and pre-action references that were
+not current when the action started; exclusion reasons and the
+`available_n/trainable_n/excluded_n` counts are retained. Conflicts registered
+in the future do not rewrite predictions already issued, and the kernel
+continues to refuse recommendations when samples are too few.
 
-[规则、冻结反例与限制](docs/EVIDENCE_GATE.zh-CN.md) · [协议、基线与候选](artifacts/evidence-gate/v1/) · [来源核验](literature/evidence-gate-source-probes.json)
+[Rules, frozen counterexamples and limits](docs/EVIDENCE_GATE.zh-CN.md) · [protocol, baselines and candidates](artifacts/evidence-gate/v1/) · [source probes](literature/evidence-gate-source-probes.json)
