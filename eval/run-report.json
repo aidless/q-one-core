@@ -1,0 +1,129 @@
+{
+ "total": 20,
+ "passed": 20,
+ "failed": 0,
+ "selftest": false,
+ "failed_by_axis": {},
+ "results": [
+  {
+   "id": "QOC-01",
+   "axis": "models/decision",
+   "ok": true,
+   "detail": "raised ValidationError"
+  },
+  {
+   "id": "QOC-02",
+   "axis": "models/decision",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "id": "QOC-03",
+   "axis": "models/decision",
+   "ok": true,
+   "detail": "raised ValidationError"
+  },
+  {
+   "id": "QOC-04",
+   "axis": "models/recommendation",
+   "ok": true,
+   "detail": "raised ValidationError"
+  },
+  {
+   "id": "QOC-05",
+   "axis": "models/recommendation",
+   "ok": true,
+   "detail": "False"
+  },
+  {
+   "id": "QOC-06",
+   "axis": "gate",
+   "ok": true,
+   "detail": "low_confidence,insufficient_personal_calibration"
+  },
+  {
+   "id": "QOC-07",
+   "axis": "gate",
+   "ok": true,
+   "detail": "missing_baseline"
+  },
+  {
+   "id": "QOC-08",
+   "axis": "ledger/chain",
+   "ok": true,
+   "detail": "{\"a\":2,\"b\":1}"
+  },
+  {
+   "id": "QOC-09",
+   "axis": "ledger/chain",
+   "ok": true,
+   "detail": "raised LedgerError"
+  },
+  {
+   "id": "QOC-10",
+   "axis": "ledger/project",
+   "ok": true,
+   "detail": "decided"
+  },
+  {
+   "id": "QOC-11",
+   "axis": "life/adaptive",
+   "ok": true,
+   "detail": "7"
+  },
+  {
+   "id": "QOC-12",
+   "axis": "report/calibration",
+   "ok": true,
+   "detail": "0.3968"
+  },
+  {
+   "id": "QOC-13",
+   "axis": "report/calibration",
+   "ok": true,
+   "detail": "0.09"
+  },
+  {
+   "id": "QOC-14",
+   "axis": "report/calibration",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "id": "QOC-15",
+   "axis": "life/model",
+   "ok": true,
+   "detail": "raised ModelError"
+  },
+  {
+   "id": "QOC-16",
+   "axis": "life/model",
+   "ok": true,
+   "detail": "2.5"
+  },
+  {
+   "id": "QOC-17",
+   "axis": "life/state",
+   "ok": true,
+   "detail": "unknown"
+  },
+  {
+   "id": "QOC-18",
+   "axis": "life/state",
+   "ok": true,
+   "detail": "5"
+  },
+  {
+   "id": "QOC-19",
+   "axis": "life/scenario",
+   "ok": true,
+   "detail": "True"
+  },
+  {
+   "id": "QOC-20",
+   "axis": "life/calibration",
+   "ok": true,
+   "detail": "ready/12"
+  }
+ ]
+}

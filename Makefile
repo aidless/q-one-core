@@ -9,3 +9,6 @@
 
 eval:
 	PYTHONPATH=src python3 -m pytest -q
+# 题库：20 条真调本仓 API / 真读 examples/*.json 的用例，全绿才算通过
+# （EVAL_ACCEPTANCE_STANDARD.md P2/P6/P11；与上面 pytest 串行，任一失败 make 即非 0）
+	python3 eval/run_cases.py

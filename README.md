@@ -170,3 +170,42 @@ in the future do not rewrite predictions already issued, and the kernel
 continues to refuse recommendations when samples are too few.
 
 [Rules, frozen counterexamples and limits](docs/EVIDENCE_GATE.zh-CN.md) · [protocol, baselines and candidates](artifacts/evidence-gate/v1/) · [source probes](literature/evidence-gate-source-probes.json)
+
+## 验收标准与复算
+
+本仓判为合格的条件是 `python3 eval/run_cases.py` 通过率必须为 100%（20/20），且 `make eval` 退出码必须为 0；任何一条失败即判为不合格。
+
+题库 `eval/cases.jsonl` 共 20 条，每条都是**真调本仓 API 或真读本仓数据文件**（不 mock），期望值现算自当前源码。
+
+| axis | 条数 | 判什么 |
+| --- | --- | --- |
+| models/decision | 3 | `validate_decision` 的 2–8 选项约束、选项 id 唯一性、`examples/decision.json` 真解析 |
+| models/recommendation | 2 | `confidence` 值域校验、`auto_eligible` 恒为 `False`（协议不允许自动执行） |
+| gate | 2 | `check_recommendation` 的拦截原因串：低置信+校准不足、无 baseline |
+| ledger/chain | 2 | `canonical_json` 键排序与紧凑分隔符、落盘后篡改事件必须 `LedgerError` |
+| ledger/project | 1 | `project_events` 对 `decision_created → baseline_recorded → human_decision` 投影出的 status |
+| report/calibration | 3 | `wilson_interval` 下界、`brier_score`、`recommended_option_not_selected` 排除计数 |
+| life/model | 2 | `schema_version` 校验、`canonical_measured_value` 规范化后的字符串下界 |
+| life/state | 2 | 区间观察下的三值判定（`unknown`）、`snapshot` 在 as_of 下的 known 计数 |
+| life/scenario | 1 | `dominates` 严格更优语义 |
+| life/adaptive | 1 | `AdaptiveKernel` 设计矩阵特征名数量 |
+| life/calibration | 1 | `DelayedACI` 在 12 条 issued→observed 后的 `status/calibration_n` |
+
+三条复算命令（均在仓库根执行）：
+
+```bash
+python3 eval/run_cases.py             # 必须 20/20；任一失败非 0 退出
+python3 eval/run_cases.py --selftest  # 必须 19/20（QOC-01 变红），证明这套题会失败
+make eval                             # pytest 79 passed + 题库 20/20，退出码 0
+```
+
+**复算说明**：`--save` 会把逐条 `status/actual/axis` 与按 axis 汇总写入 `eval/run-report.json`，改完源码后重跑 `python3 eval/run_cases.py --save` 即可复算本节的每个数字；`--json` 输出机器可读结果。题库里的期望值全部来自 `examples/*.json` 真数据与真实返回值，没有任何手写常量来自猜测。
+
+**失败归因**（`--selftest` 实跑样例，按 axis 汇总）：
+
+```
+失败归因（按 axis）：
+  models/decision: 1 条 —— QOC-01
+```
+
+失败时的定位顺序：`models/*` 先查协议校验（选项数/id 唯一/值域），`gate` 查拦截原因与阈值顺序，`ledger/*` 查链哈希与投影状态，`report/*` 查校准排除口径，`life/*` 查三值判定与 as_of 截断。若整片 axis 同时红，先怀疑 `src/qone_core` 被另一份副本（如 `build/lib/qone_core`）抢了导入路径，再怀疑逻辑回归。
