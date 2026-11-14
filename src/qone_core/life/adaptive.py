@@ -9,7 +9,7 @@ from datetime import timedelta
 from itertools import combinations
 import math
 
-from .model import ModelError, fingerprint, instant, measured_fingerprint, measured_value, number
+from .model import ModelError, fingerprint, instant, measured_fingerprint, number
 from .scenario import ScenarioKernel
 from .state import check_condition, goal_states
 from .calibration import DelayedACI, calibration_config

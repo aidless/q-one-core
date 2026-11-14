@@ -9,7 +9,7 @@ from datetime import timedelta
 from itertools import combinations
 import math
 
-from .model import ModelError, fingerprint, instant, number
+from .model import ModelError, instant, number
 from .scenario import ScenarioKernel
 from .state import check_condition, goal_states
 
